@@ -4,7 +4,7 @@ import tankBarrelUrl from "url:./assets/tankSand_barrel1_outline.png";
 import bulletUrl from "url:./assets/shotRed.png";
 
 export class Assets {
-    public static SCALE_FACTOR = 1 / 80;
+    public scaleFactor = 1 / 80;
 
     public tileSand = this._load(tileSandUrl);
     public tankBody = this._load(tankBodyUrl);

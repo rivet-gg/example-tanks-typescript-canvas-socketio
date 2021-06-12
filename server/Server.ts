@@ -12,6 +12,8 @@ export class Server {
     public rivet: RIVET.ServerApi;
 
     public constructor(public socketServer: SocketServer) {
+        this.game = new Game();
+
         this.socketServer.on("connection", this._onConnection.bind(this));
 
         this.rivet = new RIVET.ServerApi(new RIVET.Configuration({
@@ -19,9 +21,19 @@ export class Server {
             accessToken: process.env.RIVET_LOBBY_TOKEN,
         }));
         this.rivet.lobbyReady({}).then(() => console.log("Lobby ready"));
+
+        setInterval(this._update.bind(this), 50)
     }
 
     private async _onConnection(socket: Socket) {
         let connection = new Connection(this, socket);
+    }
+
+    private _update() {
+        // Update the game
+        this.game.update();
+
+        // Broadcast the state
+        this.socketServer.emit("update", this.game.createState());
     }
 }

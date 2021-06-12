@@ -32,7 +32,7 @@ export class Client {
 
         this.input = new Input();
         this.input.onKeyDown("enter", this._joinGame.bind(this));
-        this.input.onKeyDown(" ", this._shootBullet.bind(this));
+        this.input.onKeyDown(" ", this._shoot.bind(this));
 
         this.game = new Game();
         this.assets = new Assets();
@@ -69,23 +69,21 @@ export class Client {
     }
 
     private _joinGame() {
-        if (this.currentPlayerId === undefined) {
-            let player = this.game.createPlayer();
-            this.currentPlayerId = player.state.id;
-        }
+        this.connection?.socket.emit("join", (playerId: number) => {
+            this.currentPlayerId = playerId;
+        });
     }
 
-    private _shootBullet() {
-        let currentPlayer = this.currentPlayer;
-        if (currentPlayer) {
-            currentPlayer.shoot();
-        }
+    private _shoot() {
+        this.connection?.socket.emit("shoot");
     }
 
     private _update() {
         // Update the current player's state
         let currentPlayer = this.currentPlayer;
         if (currentPlayer) {
+            // TODO: Throttle this
+
             // Determine move direction
             let moveX = 0;
             let moveY = 0;
@@ -94,23 +92,13 @@ export class Client {
             if (this.input.isKeyDown("s")) moveY -= 1;
             if (this.input.isKeyDown("w")) moveY += 1;
 
-            // Normalize move direction in order to ensure players move at a consistent speed
-            // in every direction
-            if (moveX != 0 || moveY != 0) {
-                let moveMagnitude = Math.sqrt(moveX * moveX + moveY * moveY);
-                moveX /= moveMagnitude;
-                moveY /= moveMagnitude;
-            }
-
-            // Update the player's state
-            currentPlayer.state.moveX = moveX;
-            currentPlayer.state.moveY = moveY;
-
             // Determine rotation
-            currentPlayer.state.aimDir = Math.atan2(
+            let aimDir = Math.atan2(
                 this.input.mousePosition.y - this.canvas.clientHeight / 2,
                 this.input.mousePosition.x - this.canvas.clientWidth / 2,
             );
+
+            this.connection?.socket.emit("input", moveX, moveY, aimDir);
         }
 
         // Update the game
@@ -134,7 +122,7 @@ export class Client {
 
         // Center <0, 0> to the center of the screen and regulate the height
         ctx.translate(ctx.canvas.width / 2, ctx.canvas.height / 2);
-        let scale = window.innerHeight / Game.SCREEN_HEIGHT;
+        let scale = window.innerHeight / this.game.screenHeight;
         let screenWidth = window.innerWidth / scale;
         ctx.scale(scale, scale);
 
@@ -149,11 +137,11 @@ export class Client {
 
         // Draw a tiled background that fits the camera
         if (this.assets.tileSand.complete) {
-            let tileSize = this.assets.tileSand.height * Assets.SCALE_FACTOR;
+            let tileSize = this.assets.tileSand.height * this.assets.scaleFactor;
             let tileXMin = Math.floor((cameraOffsetX - screenWidth / 2) / tileSize);
             let tileXMax = Math.ceil((cameraOffsetX + screenWidth / 2) / tileSize);
-            let tileYMin = Math.floor((cameraOffsetY - Game.SCREEN_HEIGHT / 2) / tileSize);
-            let tileYMax = Math.ceil((cameraOffsetY + Game.SCREEN_HEIGHT / 2) / tileSize);
+            let tileYMin = Math.floor((cameraOffsetY - this.game.screenHeight / 2) / tileSize);
+            let tileYMax = Math.ceil((cameraOffsetY + this.game.screenHeight / 2) / tileSize);
             for (let x = tileXMin; x <= tileXMax; x++) {
                 for (let y = tileYMin; y <= tileYMax; y++) {
                     ctx.drawImage(this.assets.tileSand, x * tileSize, y * tileSize, tileSize, tileSize);

@@ -30,8 +30,8 @@ export class Bullet {
         // Draw bullet
         ctx.save();
         ctx.rotate(Math.atan2(-this.state.velocityY, this.state.velocityX) + Math.PI / 2);
-        let bulletWidth = client.assets.bullet.width * Assets.SCALE_FACTOR;
-        let bulletHeight = client.assets.bullet.height * Assets.SCALE_FACTOR;
+        let bulletWidth = client.assets.bullet.width * client.assets.scaleFactor;
+        let bulletHeight = client.assets.bullet.height * client.assets.scaleFactor;
         ctx.drawImage(client.assets.bullet, -bulletWidth / 2, -bulletHeight / 2, bulletWidth, bulletHeight);
         ctx.restore();
 

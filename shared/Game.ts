@@ -1,18 +1,54 @@
 import {Client} from "../client/Client";
-import {Bullet} from "./Bullet";
-import {Player} from "./Player";
+import {Bullet, BulletState} from "./Bullet";
+import {Player, PlayerState} from "./Player";
+
+export interface GameState {
+    players: PlayerState[],
+    bullets: BulletState[],
+}
 
 export class Game {
-    public static SCREEN_HEIGHT: number = 12;
-
     public lastUpdateTimestamp: number = Date.now();
     public players: Player[] = [];
     public bullets: Bullet[] = [];
+
+    public screenHeight: number = 12;
 
     private _idCounter = 1;
 
     constructor() {
         
+    }
+
+    public createState(): GameState {
+        return {
+            players: this.players.map(p => p.state),
+            bullets: this.bullets.map(p => p.state),
+        };
+    }
+
+    public applyState(state: GameState) {
+        for (let playerState of state.players) {
+            let player = this.playerWithId(playerState.id);
+            if (!player) {
+                player = new Player(this, playerState);
+                this.players.push(player);
+            } else {
+                player.state = playerState;
+            }
+        }
+
+        for (let bulletState of state.bullets) {
+            let bullet = this.bulletWithId(bulletState.id);
+            if (!bullet) {
+                bullet = new Bullet(this, bulletState);
+                this.bullets.push(bullet);
+            } else {
+                bullet.state = bulletState;
+            }
+        }
+
+        // TODO: Remove unknown players and bullets
     }
 
     public generateId(): number {
@@ -70,5 +106,9 @@ export class Game {
 
     public playerWithId(id: number): Player | undefined {
         return this.players.find(player => player.state.id == id);
+    }
+
+    public bulletWithId(id: number): Bullet | undefined {
+        return this.bullets.find(bullet => bullet.state.id == id);
     }
 }

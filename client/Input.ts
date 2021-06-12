@@ -15,6 +15,9 @@ export class Input {
     private _keyDown(event: KeyboardEvent) {
         let key = event.key.toLowerCase();
 
+        // Prevent handling duplicate key events
+        if (this._activeKeys.has(key)) return;
+
         this._activeKeys.add(key);
 
         let callbacks = this._keyDownEvents.get(key);

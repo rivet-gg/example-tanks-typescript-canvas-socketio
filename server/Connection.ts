@@ -1,7 +1,18 @@
 import {Server} from "./Server";
 import {Socket} from "socket.io";
+import {Player} from "../shared/Player";
 
 export class Connection {
+    public currentPlayerId?: number;
+
+    public get currentPlayer(): Player | undefined {
+        if (this.currentPlayerId) {
+            return this._server.game.playerWithId(this.currentPlayerId)
+        } else {
+            return undefined;
+        }
+    }
+
     public constructor(private _server: Server, private _socket: Socket) {
         this._socket.once("init", this._onInit.bind(this));
     }
@@ -24,6 +35,8 @@ export class Connection {
 
         this._socket.on("disconnect", this._onDisconnect.bind(this));
         this._socket.on("join", this._onJoin.bind(this));
+        this._socket.on("shoot", this._onShoot.bind(this));
+        this._socket.on("input", this._onInput.bind(this));
 
         cb();
     }
@@ -32,7 +45,33 @@ export class Connection {
         // TODO: Remove the player
     }
 
-    private _onJoin() {
-        console.log("join");
+    private _onJoin(cb: (playerId: number) => void) {
+        if (!this.currentPlayer) {
+            let player = this._server.game.createPlayer();
+            this.currentPlayerId = player.state.id;
+            cb(player.state.id);
+        }
+    }
+
+    private _onShoot() {
+        this.currentPlayer?.shoot();
+    }
+
+    private _onInput(moveX: number, moveY: number, aimDir: number) {
+        let currentPlayer = this.currentPlayer;
+        if (!currentPlayer) return;
+
+        // Normalize move direction in order to ensure players move at a consistent speed
+        // in every direction
+        if (moveX != 0 || moveY != 0) {
+            let moveMagnitude = Math.sqrt(moveX * moveX + moveY * moveY);
+            moveX /= moveMagnitude;
+            moveY /= moveMagnitude;
+        }
+
+        // Update the player's state
+        currentPlayer.state.moveX = moveX;
+        currentPlayer.state.moveY = moveY;
+        currentPlayer.state.aimDir = aimDir;
     }
 }
