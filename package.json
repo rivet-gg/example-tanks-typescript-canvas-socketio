@@ -2,11 +2,11 @@
   "name": "tanks-typescript-canvas-socketio",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "watch-server": "nodemon -r dotenv/config server/** shared/** --ext ts --exec ts-node server/index.ts",
     "watch-client": "parcel client/index.html --host 0.0.0.0 --port 7900 --hmr-port 7901",
-    "build-client": "parcel build client/index.html"
+    "build-client": "npx parcel build client/index.html --dist-dir dist",
+    "build-server": "npx parcel build server/index.ts --dist-dir dist"
   },
   "author": "",
   "license": "MIT",
@@ -16,12 +16,11 @@
     "socket.io": "^4.0.1"
   },
   "devDependencies": {
-    "@parcel/transformer-image": "^2.0.0-nightly.2342",
     "@types/react": "^17.0.4",
     "@types/react-dom": "^17.0.3",
     "dotenv": "^5.0.1",
     "nodemon": "^2.0.7",
-    "parcel": "^2.0.0-beta.3",
+    "parcel": "2.0.0-beta.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "socket.io-client": "^4.0.1",

@@ -6,7 +6,7 @@ COPY package.json package-lock.json ./
 RUN npm install --only=prod
 
 COPY . .
-RUN npx -p typescript@4 tsc server/index.ts
+RUN npm run build-server
 
 # === Run ===
 FROM node:15-alpine
@@ -15,4 +15,4 @@ COPY --from=build /app /app
 
 ENV PORT=80
 EXPOSE 80
-CMD node server/index.js
+CMD node dist/index.js
