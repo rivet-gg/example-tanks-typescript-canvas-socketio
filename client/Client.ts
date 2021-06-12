@@ -2,6 +2,8 @@ import { Input } from "./Input";
 import { Game } from "../shared/Game";
 import {Assets} from "./Assets";
 import {Player} from "../shared/Player";
+import * as RIVET from "@rivet-gg/api-game";
+import {Connection} from "./Connection";
 
 export class Client {
     public static shared: Client;
@@ -13,6 +15,9 @@ export class Client {
 
     public game: Game;
     public currentPlayerId?: number;
+
+    public rivet: RIVET.ClientApi;
+    public connection?: Connection;
 
     public get currentPlayer(): Player | undefined {
         if (this.currentPlayerId) {
@@ -35,6 +40,27 @@ export class Client {
         window.addEventListener("resize", this._resize.bind(this));
         this._resize();
         this._update();
+
+        this.rivet = new RIVET.ClientApi(new RIVET.Configuration({
+            accessToken: process.env.RIVET_CLIENT_TOKEN,
+        }));
+        this._connect();
+    }
+
+    private async _connect() {
+        try {
+            console.log("Finding lobby...");
+            let findRes = await this.rivet.findLobby({
+                gameModes: ["default"],
+            });
+            if (!findRes.lobby) throw new Error("lobby not found");
+
+            console.log("Connecting...");
+            this.connection = new Connection(this, findRes.lobby);
+        } catch (err) {
+            console.error("Failed to connect:", err);
+            return;
+        }
     }
 
     private _resize() {
