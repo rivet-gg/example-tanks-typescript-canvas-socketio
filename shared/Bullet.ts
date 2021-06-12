@@ -1,3 +1,4 @@
+import {Assets} from "../client/Assets";
 import {Client} from "../client/Client";
 import {Game} from "./Game";
 
@@ -29,9 +30,9 @@ export class Bullet {
         // Draw bullet
         ctx.save();
         ctx.rotate(Math.atan2(-this.state.velocityY, this.state.velocityX) + Math.PI / 2);
-        let bulletWidth = ASSETS.bullet.width * ASSET_SCALE_FACTOR;
-        let bulletHeight = ASSETS.bullet.height * ASSET_SCALE_FACTOR;
-        ctx.drawImage(ASSETS.bullet, -bulletWidth / 2, -bulletHeight / 2, bulletWidth, bulletHeight);
+        let bulletWidth = client.assets.bullet.width * Assets.SCALE_FACTOR;
+        let bulletHeight = client.assets.bullet.height * Assets.SCALE_FACTOR;
+        ctx.drawImage(client.assets.bullet, -bulletWidth / 2, -bulletHeight / 2, bulletWidth, bulletHeight);
         ctx.restore();
 
         ctx.restore();
