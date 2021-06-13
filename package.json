@@ -6,14 +6,15 @@
     "watch-server": "nodemon -r dotenv/config server/** shared/** --ext ts --exec ts-node server/index.ts",
     "watch-client": "parcel client/index.html --host 0.0.0.0 --port 7900 --hmr-port 7901",
     "build-client": "npx parcel build client/index.html --dist-dir dist",
-    "build-server": "npx parcel build server/index.ts --dist-dir dist"
+    "build-server": "npx -p typescript tsc --project tsconfig.json"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
     "@rivet-gg/api-game": "^0.0.2",
     "node-fetch": "^2.6.1",
-    "socket.io": "^4.0.1"
+    "socket.io": "^4.0.1",
+    "socket.io-client": "^4.0.1"
   },
   "devDependencies": {
     "@types/react": "^17.0.4",
@@ -21,10 +22,7 @@
     "dotenv": "^5.0.1",
     "nodemon": "^2.0.7",
     "parcel": "2.0.0-beta.3",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "socket.io-client": "^4.0.1",
     "ts-node": "^9.1.1",
-    "typescript": "^4.2.4"
+    "typescript": "^4.3.2"
   }
 }

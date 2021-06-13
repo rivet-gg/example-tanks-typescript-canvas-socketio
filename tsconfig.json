@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "moduleResolution": "node",
+    "lib": ["ES6", "DOM"],
+    "outDir": "dist/"
+  },
+  "include": [
+    "server/**/*.ts",
+    "client/**/*.ts",
+    "shared/**/*.ts"
+  ]
+}

@@ -15,4 +15,4 @@ COPY --from=build /app /app
 
 ENV PORT=80
 EXPOSE 80
-CMD node dist/index.js
+CMD node dist/server/index.js
