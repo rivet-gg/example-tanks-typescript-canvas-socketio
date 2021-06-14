@@ -13,16 +13,17 @@ export interface PlayerState {
 }
 
 export class Player {
-    public static PLAYER_MOVE_SPEED: number = 10;
-    public static BARREL_LENGTH: number = 0.46;
+    public moveSpeed: number = 500
+    public radius: number = 72;
+    public barrelLength: number = 45;
 
     constructor(private game: Game, public state: PlayerState) {
     }
     
     public update(dt: number) {
         // Move the player based on the move input
-        this.state.positionX += this.state.moveX * Player.PLAYER_MOVE_SPEED * dt;
-        this.state.positionY += this.state.moveY * Player.PLAYER_MOVE_SPEED * dt;
+        this.state.positionX += this.state.moveX * this.moveSpeed * dt;
+        this.state.positionY += this.state.moveY * this.moveSpeed * dt;
     }
 
     public render(client: Client, ctx: CanvasRenderingContext2D) {
@@ -56,8 +57,8 @@ export class Player {
         let bullet = this.game.createBullet();
 
         // Position at the end of the barrel
-        bullet.state.positionX = this.state.positionX + dirX * Player.BARREL_LENGTH;
-        bullet.state.positionY = this.state.positionY + dirY * Player.BARREL_LENGTH;
+        bullet.state.positionX = this.state.positionX + dirX * this.barrelLength;
+        bullet.state.positionY = this.state.positionY + dirY * this.barrelLength;
 
         // Set the velocity to the direction of the barrel
         bullet.state.velocityX = dirX * Bullet.BULLET_VELOCITY;

@@ -6,6 +6,8 @@ import {GameState} from "../shared/Game";
 export class Connection {
     public socket: Socket;
 
+    public isConnected: boolean = false;
+
     public constructor(private _client: Client, public lobby: RIVET.MatchmakerLobby) {
         this.socket = io(`${lobby.ports[0].hostname}:${lobby.ports[0].source}`);
         this.socket.on("connect", this._onConnect.bind(this, lobby.player.token));
@@ -20,6 +22,7 @@ export class Connection {
 
     private _onInit() {
         console.log("Initiated.");
+        this.isConnected = true;
     }
 
     private _onUpdate(state: GameState) {
@@ -27,5 +30,6 @@ export class Connection {
     }
 
     private _onDisconnect() {
+        this.isConnected = false;
     }
 }

@@ -11,7 +11,9 @@ export interface BulletState {
 }
 
 export class Bullet {
-    public static BULLET_VELOCITY = 20;
+    public static BULLET_VELOCITY = 1500;
+
+    public radius: number = 42;
 
     constructor(private game: Game, public state: BulletState) {
 

@@ -121,7 +121,7 @@ export class Client {
         let currentPlayer = this.currentPlayer;
 
         // Update world screen width and height
-        let scale = window.innerHeight / this.game.viewDistanceY;
+        let scale = window.innerHeight / this.game.viewportHeight;
         this.screenWidth = window.innerWidth / scale;
         this.screenHeight = window.innerHeight / scale;
 
@@ -161,8 +161,8 @@ export class Client {
             let tileSize = this.assets.tileSand.height * this.assets.scaleFactor;
             let tileXMin = Math.floor((this.cameraOffsetX - this.screenWidth / 2) / tileSize);
             let tileXMax = Math.ceil((this.cameraOffsetX + this.screenWidth / 2) / tileSize);
-            let tileYMin = Math.floor((this.cameraOffsetY - this.game.viewDistanceY / 2) / tileSize);
-            let tileYMax = Math.ceil((this.cameraOffsetY + this.game.viewDistanceY / 2) / tileSize);
+            let tileYMin = Math.floor((this.cameraOffsetY - this.game.viewportHeight / 2) / tileSize);
+            let tileYMax = Math.ceil((this.cameraOffsetY + this.game.viewportHeight / 2) / tileSize);
             for (let x = tileXMin; x <= tileXMax; x++) {
                 for (let y = tileYMin; y <= tileYMax; y++) {
                     ctx.drawImage(this.assets.tileSand, x * tileSize, y * tileSize, tileSize, tileSize);
@@ -172,7 +172,26 @@ export class Client {
     }
 
     private _renderMenu(ctx: CanvasRenderingContext2D) {
-        ctx.fillStyle = "red";
-        ctx.fillRect(-this.screenWidth / 2 + 0.1, -this.screenHeight / 2 + 0.1, 1, 1);
+
+        if (!this.connection?.isConnected) {
+            this._renderFullscreenMessage(ctx, "Connecting...");
+        } else if (!this.currentPlayerId) {
+            this._renderFullscreenMessage(ctx, "Press Enter to join");
+        }
+    }
+
+    private _renderFullscreenMessage(ctx: CanvasRenderingContext2D, message: string) {
+        ctx.save();
+        ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
+        ctx.fillRect(-this.screenWidth / 2, -this.screenHeight / 2, this.screenWidth, this.screenHeight);
+        ctx.restore();
+
+        ctx.save();
+        ctx.fillStyle = "white";
+        ctx.font = "32px Helvetica";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("Press Enter to join", 0, 0);
+        ctx.restore();
     }
 }
