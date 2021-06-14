@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "watch-server": "nodemon -r dotenv/config server/** shared/** --ext ts --exec ts-node server/index.ts",
-    "watch-client": "parcel client/index.html --host 0.0.0.0 --port 7900 --hmr-port 7901",
+    "watch-client": "parcel client/index.html --host 0.0.0.0 --port 8080 --hmr-port 80801",
     "build-client": "npx parcel build client/index.html --dist-dir dist",
     "build-server": "npx -p typescript tsc --project tsconfig.json"
   },
