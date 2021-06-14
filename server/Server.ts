@@ -20,7 +20,12 @@ export class Server {
             fetchApi: fetch,
             accessToken: process.env.RIVET_LOBBY_TOKEN,
         }));
-        this.rivet.lobbyReady({}).then(() => console.log("Lobby ready"));
+        this.rivet.lobbyReady({})
+            .then(() => console.log("Lobby ready"))
+            .catch((err) => {
+                console.error("Failed to authenticate with Rivet", err);
+                process.exit(1);
+            });
 
         setInterval(this._update.bind(this), 50)
     }
