@@ -14,7 +14,7 @@ export interface PlayerState {
 
 export class Player {
     public moveSpeed: number = 500
-    public radius: number = 72;
+    public radius: number = 76;
     public barrelLength: number = 45;
 
     constructor(private game: Game, public state: PlayerState) {
@@ -24,6 +24,12 @@ export class Player {
         // Move the player based on the move input
         this.state.positionX += this.state.moveX * this.moveSpeed * dt;
         this.state.positionY += this.state.moveY * this.moveSpeed * dt;
+
+        // Restrain to bounds
+        this.state.positionX = Math.max(this.state.positionX, -this.game.arenaSize / 2 + this.radius / 2)
+        this.state.positionX = Math.min(this.state.positionX, this.game.arenaSize / 2 - this.radius / 2)
+        this.state.positionY = Math.max(this.state.positionY, -this.game.arenaSize / 2 + this.radius / 2)
+        this.state.positionY = Math.min(this.state.positionY, this.game.arenaSize / 2 - this.radius / 2)
     }
 
     public render(client: Client, ctx: CanvasRenderingContext2D) {

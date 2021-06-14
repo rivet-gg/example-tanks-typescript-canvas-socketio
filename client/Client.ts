@@ -152,8 +152,8 @@ export class Client {
         ctx.save();
         ctx.translate(-this.cameraOffsetX, -this.cameraOffsetY);
         this._renderBackground(ctx);
-        this._renderWall(ctx);
         this.game.render(this, ctx);
+        this._renderWall(ctx);
         ctx.restore();
 
         // Render menu in front of game
@@ -179,17 +179,21 @@ export class Client {
 
     private _renderWall(ctx: CanvasRenderingContext2D) {
         if (this.assets.wall.complete) {
-            let idealSpacing = 60;
-            let wallSpacing = this.game.arenaSize / Math.ceil(this.game.arenaSize / idealSpacing);  // Space evenly
             let wallSize = this.assets.wall.width * this.assets.scaleFactor;
-            let tileXYMin = Math.floor(-this.game.arenaSize / 2 / wallSpacing);
-            let tileXYMax = Math.ceil(this.game.arenaSize / 2 / wallSpacing);
-            for (let x = tileXYMin; x <= tileXYMax; x++) {
-                for (let y = tileXYMin; y <= tileXYMax; y++) {
-                    if (x == tileXYMin || x == tileXYMax || y == tileXYMin || y == tileXYMax) {
-                        ctx.drawImage(this.assets.wall, x * wallSpacing - wallSize / 2, y * wallSpacing - wallSize / 2, wallSize, wallSize);
-                    }
-                }
+            let paddedArenaSize = this.game.arenaSize + wallSize;  // Account for border image width along the outline
+            let idealSpacing = 60;
+            let wallCount = Math.floor(paddedArenaSize / idealSpacing)
+            for (let i = 0; i < wallCount; i++) {
+                let progress = -paddedArenaSize / 2 + i / (wallCount - 1) * paddedArenaSize;
+
+                // Top
+                ctx.drawImage(this.assets.wall, progress - wallSize / 2, -paddedArenaSize / 2 - wallSize / 2, wallSize, wallSize);
+                // Bottom
+                ctx.drawImage(this.assets.wall, progress - wallSize / 2, paddedArenaSize / 2 - wallSize / 2, wallSize, wallSize);
+                // Left
+                ctx.drawImage(this.assets.wall, -paddedArenaSize / 2 - wallSize / 2, progress - wallSize / 2, wallSize, wallSize);
+                // Right
+                ctx.drawImage(this.assets.wall, paddedArenaSize / 2 - wallSize / 2, progress - wallSize / 2, wallSize, wallSize);
             }
         }
     }
