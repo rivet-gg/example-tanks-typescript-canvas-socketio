@@ -12,7 +12,7 @@ export class Game {
     public players: Player[] = [];
     public bullets: Bullet[] = [];
 
-    public screenHeight: number = 12;
+    public viewDistanceY: number = 12;
 
     private _idCounter = 1;
 

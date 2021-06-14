@@ -19,6 +19,11 @@ export class Client {
     public rivet: RIVET.ClientApi;
     public connection?: Connection;
 
+    public screenWidth: number = 0;
+    public screenHeight: number = 0;
+    public cameraOffsetX: number = 0;
+    public cameraOffsetY: number = 0;
+
     public get currentPlayer(): Player | undefined {
         if (this.currentPlayerId) {
             return this.game.playerWithId(this.currentPlayerId)
@@ -115,43 +120,59 @@ export class Client {
     private _render(ctx: CanvasRenderingContext2D) {
         let currentPlayer = this.currentPlayer;
 
+        // Update world screen width and height
+        let scale = window.innerHeight / this.game.viewDistanceY;
+        this.screenWidth = window.innerWidth / scale;
+        this.screenHeight = window.innerHeight / scale;
+
         ctx.save();
 
         // Clear any graphics left on the canvas from the last frame
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-        // Center <0, 0> to the center of the screen and regulate the height
+        // Center <0, 0> to the center of the screen and scale to have an equal height on all devices
         ctx.translate(ctx.canvas.width / 2, ctx.canvas.height / 2);
-        let scale = window.innerHeight / this.game.screenHeight;
-        let screenWidth = window.innerWidth / scale;
         ctx.scale(scale, scale);
 
         // Center on the player (if needed)
-        let cameraOffsetX = 0;
-        let cameraOffsetY = 0;
         if (currentPlayer !== undefined) {
-            cameraOffsetX = currentPlayer.state.positionX
-            cameraOffsetY = -currentPlayer.state.positionY;
+            this.cameraOffsetX = currentPlayer.state.positionX
+            this.cameraOffsetY = -currentPlayer.state.positionY;
+        } else {
+            this.cameraOffsetX = 0;
+            this.cameraOffsetY = 0;
         }
-        ctx.translate(-cameraOffsetX, -cameraOffsetY);
 
-        // Draw a tiled background that fits the camera
+        // Render the world
+        ctx.save();
+        ctx.translate(-this.cameraOffsetX, -this.cameraOffsetY);
+        this._drawBackground(ctx);
+        this.game.render(this, ctx);
+        ctx.restore();
+
+        // Render menu in front of game
+        this._renderMenu(ctx);
+
+        ctx.restore();
+    }
+
+    private _drawBackground(ctx: CanvasRenderingContext2D) {
         if (this.assets.tileSand.complete) {
             let tileSize = this.assets.tileSand.height * this.assets.scaleFactor;
-            let tileXMin = Math.floor((cameraOffsetX - screenWidth / 2) / tileSize);
-            let tileXMax = Math.ceil((cameraOffsetX + screenWidth / 2) / tileSize);
-            let tileYMin = Math.floor((cameraOffsetY - this.game.screenHeight / 2) / tileSize);
-            let tileYMax = Math.ceil((cameraOffsetY + this.game.screenHeight / 2) / tileSize);
+            let tileXMin = Math.floor((this.cameraOffsetX - this.screenWidth / 2) / tileSize);
+            let tileXMax = Math.ceil((this.cameraOffsetX + this.screenWidth / 2) / tileSize);
+            let tileYMin = Math.floor((this.cameraOffsetY - this.game.viewDistanceY / 2) / tileSize);
+            let tileYMax = Math.ceil((this.cameraOffsetY + this.game.viewDistanceY / 2) / tileSize);
             for (let x = tileXMin; x <= tileXMax; x++) {
                 for (let y = tileYMin; y <= tileYMax; y++) {
                     ctx.drawImage(this.assets.tileSand, x * tileSize, y * tileSize, tileSize, tileSize);
                 }
             }
         }
+    }
 
-        // Render the game
-        this.game.render(this, ctx);
-
-        ctx.restore();
+    private _renderMenu(ctx: CanvasRenderingContext2D) {
+        ctx.fillStyle = "red";
+        ctx.fillRect(-this.screenWidth / 2 + 0.1, -this.screenHeight / 2 + 0.1, 1, 1);
     }
 }
