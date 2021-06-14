@@ -2,6 +2,7 @@ import tileSandUrl from "url:./assets/tileSand1.png";
 import tankBodyUrl from "url:./assets/tankBody_sand_outline.png";
 import tankBarrelUrl from "url:./assets/tankSand_barrel1_outline.png";
 import bulletUrl from "url:./assets/shotRed.png";
+import wallUrl from "url:./assets/barricadeWood.png";
 
 export class Assets {
     public scaleFactor = 1;
@@ -10,6 +11,7 @@ export class Assets {
     public tankBody = this._load(tankBodyUrl);
     public tankBarrel = this._load(tankBarrelUrl);
     public bullet = this._load(bulletUrl);
+    public wall = this._load(wallUrl);
 
     private _load(url: string): HTMLImageElement {
         let img = new Image();

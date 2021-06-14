@@ -12,6 +12,8 @@ export class Game {
     public players: Player[] = [];
     public bullets: Bullet[] = [];
 
+    public arenaSize: number = 2000;
+
     public viewportHeight: number = 900;
 
     private _idCounter = 1;

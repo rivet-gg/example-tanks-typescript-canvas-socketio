@@ -146,7 +146,8 @@ export class Client {
         // Render the world
         ctx.save();
         ctx.translate(-this.cameraOffsetX, -this.cameraOffsetY);
-        this._drawBackground(ctx);
+        this._renderBackground(ctx);
+        this._renderWall(ctx);
         this.game.render(this, ctx);
         ctx.restore();
 
@@ -156,7 +157,7 @@ export class Client {
         ctx.restore();
     }
 
-    private _drawBackground(ctx: CanvasRenderingContext2D) {
+    private _renderBackground(ctx: CanvasRenderingContext2D) {
         if (this.assets.tileSand.complete) {
             let tileSize = this.assets.tileSand.height * this.assets.scaleFactor;
             let tileXMin = Math.floor((this.cameraOffsetX - this.screenWidth / 2) / tileSize);
@@ -166,6 +167,23 @@ export class Client {
             for (let x = tileXMin; x <= tileXMax; x++) {
                 for (let y = tileYMin; y <= tileYMax; y++) {
                     ctx.drawImage(this.assets.tileSand, x * tileSize, y * tileSize, tileSize, tileSize);
+                }
+            }
+        }
+    }
+
+    private _renderWall(ctx: CanvasRenderingContext2D) {
+        if (this.assets.wall.complete) {
+            let idealSpacing = 60;
+            let wallSpacing = this.game.arenaSize / Math.ceil(this.game.arenaSize / idealSpacing);  // Space evenly
+            let wallSize = this.assets.wall.width * this.assets.scaleFactor;
+            let tileXYMin = Math.floor(-this.game.arenaSize / 2 / wallSpacing);
+            let tileXYMax = Math.ceil(this.game.arenaSize / 2 / wallSpacing);
+            for (let x = tileXYMin; x <= tileXYMax; x++) {
+                for (let y = tileXYMin; y <= tileXYMax; y++) {
+                    if (x == tileXYMin || x == tileXYMax || y == tileXYMin || y == tileXYMax) {
+                        ctx.drawImage(this.assets.wall, x * wallSpacing - wallSize / 2, y * wallSpacing - wallSize / 2, wallSize, wallSize);
+                    }
                 }
             }
         }
