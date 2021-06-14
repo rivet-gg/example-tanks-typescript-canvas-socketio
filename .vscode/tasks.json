@@ -5,6 +5,7 @@
 			"label": "Start Development",
 			"type": "npm",
 			"script": "dev",
+			"problemMatcher": []
 		}
 	]
 }
