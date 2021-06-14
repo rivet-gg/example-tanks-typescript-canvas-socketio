@@ -127,6 +127,11 @@ export class Client {
 
         ctx.save();
 
+        // Set default styles
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.font = "36px Big Shoulders Stencil Display";
+
         // Clear any graphics left on the canvas from the last frame
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
@@ -190,11 +195,37 @@ export class Client {
     }
 
     private _renderMenu(ctx: CanvasRenderingContext2D) {
-
         if (!this.connection?.isConnected) {
             this._renderFullscreenMessage(ctx, "Connecting...");
         } else if (!this.currentPlayerId) {
             this._renderFullscreenMessage(ctx, "Press Enter to join");
+
+            // Render title
+            ctx.save();
+            ctx.fillStyle = "white";
+            ctx.strokeStyle = "#333";
+            ctx.lineWidth = 30;
+            ctx.font = "900 175px Big Shoulders Stencil Display";
+            let titleY = -this.screenHeight / 2 + 150;
+            ctx.strokeText("Tanks", 0, titleY);
+            ctx.fillText("Tanks", 0, titleY);
+            ctx.restore();
+
+            // Render instructions
+            ctx.save();
+            ctx.fillStyle = "white";
+            let instructions = [
+                "Controls:",
+                "Aim: Mouse",
+                "Move: WASD",
+                "Fire: Space",
+            ];
+            ctx.textAlign = "left";
+            ctx.textBaseline = "bottom";
+            for (let i = 0; i < instructions.length; i++) {
+                ctx.fillText(instructions[i], -this.screenWidth / 2 + 20, this.screenHeight / 2 - 20 - (instructions.length - i - 1) * 50);
+            }
+            ctx.restore();
         }
     }
 
@@ -206,9 +237,6 @@ export class Client {
 
         ctx.save();
         ctx.fillStyle = "white";
-        ctx.font = "32px Helvetica";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
         ctx.fillText("Press Enter to join", 0, 0);
         ctx.restore();
     }
