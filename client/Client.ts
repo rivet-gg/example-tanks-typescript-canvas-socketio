@@ -34,19 +34,24 @@ export class Client {
     }
 
     constructor() {
+        // Setup rendering
         this.canvas = document.getElementById("game") as any;
+        this.assets = new Assets();
+        
+        // Handle resizing
+        window.addEventListener("resize", this._resize.bind(this));
+        this._resize();
 
+        // Setup input
         this.input = new Input();
         this.input.onKeyDown("enter", this._joinGame.bind(this));
         this.input.onKeyDown(" ", this._shoot.bind(this));
 
+        // Setup game
         this.game = new Game(false);
-        this.assets = new Assets();
-
-        window.addEventListener("resize", this._resize.bind(this));
-        this._resize();
         this._update();
 
+        // Create Rivet
         this.rivet = new RIVET.ClientApi(new RIVET.Configuration({
             accessToken: process.env.RIVET_CLIENT_TOKEN,
         }));
@@ -88,8 +93,6 @@ export class Client {
         // Update the current player's state
         let currentPlayer = this.currentPlayer;
         if (currentPlayer) {
-            // TODO: Throttle this
-
             // Determine move direction
             let moveX = 0;
             let moveY = 0;
@@ -202,7 +205,7 @@ export class Client {
     private _renderMenu(ctx: CanvasRenderingContext2D) {
         if (!this.connection?.isConnected) {
             this._renderFullscreenMessage(ctx, "Connecting...");
-        } else if (!this.currentPlayerId) {
+        } else if (!this.currentPlayer) {
             this._renderFullscreenMessage(ctx, "Press Enter to join");
 
             // Render title

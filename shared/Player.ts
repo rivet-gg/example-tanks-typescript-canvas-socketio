@@ -80,7 +80,7 @@ export class Player {
         ctx.save();
         ctx.fillStyle = "white";
         ctx.strokeStyle = "#333";
-        ctx.lineWidth = 4;
+        ctx.lineWidth = 6;
         ctx.font = Utilities.font(32, 700);
         ctx.strokeText(this.state.score.toString(), 0, scoreY);
         ctx.fillText(this.state.score.toString(), 0, scoreY);
