@@ -1,10 +1,10 @@
-import tileSandUrl from "url:./assets/tileSand1.png";
-import tankBodyRedUrl from "url:./assets/tankBody_red_outline.png";
-import tankBodyBlueUrl from "url:./assets/tankBody_blue_outline.png";
-import tankBarrelRedUrl from "url:./assets/tankRed_barrel1_outline.png";
-import tankBarrelBlueUrl from "url:./assets/tankBlue_barrel1_outline.png";
-import bulletUrl from "url:./assets/shotRed.png";
-import wallUrl from "url:./assets/barricadeWood.png";
+import tileSandUrl from "./assets/tileSand1.png";
+import tankBodyRedUrl from "./assets/tankBody_red_outline.png";
+import tankBodyBlueUrl from "./assets/tankBody_blue_outline.png";
+import tankBarrelRedUrl from "./assets/tankRed_barrel1_outline.png";
+import tankBarrelBlueUrl from "./assets/tankBlue_barrel1_outline.png";
+import bulletUrl from "./assets/shotRed.png";
+import wallUrl from "./assets/barricadeWood.png";
 
 export class Assets {
     public scaleFactor = 1;

@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "module": "CommonJS",
-    "moduleResolution": "Node",
     "lib": ["ES6", "DOM"],
-    "outDir": "dist/"
+    "module": "ES6",
+    "moduleResolution": "Node",
+    "outDir": "dist/",
+    "target": "ES5"
   },
   "include": [
     "server/**/*.ts",

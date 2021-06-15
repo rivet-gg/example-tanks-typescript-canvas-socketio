@@ -9,7 +9,7 @@ import { Utilities } from "../shared/Utilities";
 export class Client {
     public static shared: Client;
 
-    public static TITLE_TEXT: string = "Tanks";
+    public static TITLE_TEXT: string = "Tanks!";
 
     public canvas: HTMLCanvasElement;
 
