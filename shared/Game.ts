@@ -17,7 +17,7 @@ export class Game {
 
     public viewportHeight: number = 900;
 
-    private _idCounter = 1;
+    private _idCounter: number = 1;
 
     constructor(public isServer: boolean) {
         

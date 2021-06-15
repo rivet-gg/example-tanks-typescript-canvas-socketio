@@ -14,7 +14,7 @@ export interface BulletState {
 }
 
 export class Bullet {
-    public static BULLET_VELOCITY = 1500;
+    public static BULLET_VELOCITY: number = 1500;
 
     public radius: number = 42;
     public damage: number = 0.22;
