@@ -3,4 +3,7 @@ export class Utilities {
         return `${weight} ${size}px Big Shoulders Stencil Display`;
     }
 
+    public static lerp(a: number, b: number, t: number): number {
+        return (b - a) * t + a;
+    }
 }

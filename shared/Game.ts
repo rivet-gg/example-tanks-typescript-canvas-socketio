@@ -1,6 +1,7 @@
 import {Client} from "../client/Client";
 import {Bullet, BulletState} from "./Bullet";
 import {Player, PlayerState} from "./Player";
+import { Utilities } from "./Utilities";
 
 export interface GameState {
     players: PlayerState[],
@@ -90,8 +91,8 @@ export class Game {
     public createPlayer(): Player {
         let player = new Player(this, {
             id: this.generateId(),
-            positionX: 0,
-            positionY: 0,
+            positionX: Utilities.lerp(-this.arenaSize / 2, this.arenaSize / 2, Math.random()),
+            positionY: Utilities.lerp(-this.arenaSize / 2, this.arenaSize / 2, Math.random()),
             aimDir: 0,
             moveX: 0,
             moveY: 0,
