@@ -95,6 +95,8 @@ export class Game {
             aimDir: 0,
             moveX: 0,
             moveY: 0,
+            health: 1,
+            score: 0,
         });
         this.players.push(player);
         return player;
@@ -105,9 +107,10 @@ export class Game {
         if (idx != -1) this.players.splice(idx, 1);
     }
 
-    public createBullet(): Bullet {
+    public createBullet(shooterId: number): Bullet {
         let bullet = new Bullet(this, {
             id: this.generateId(),
+            shooterId,
             positionX: 0,
             positionY: 0,
             velocityX: 0,

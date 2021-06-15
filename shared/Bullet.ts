@@ -1,9 +1,12 @@
 import {Assets} from "../client/Assets";
 import {Client} from "../client/Client";
 import {Game} from "./Game";
+import { Physics } from "./Physics";
+import { Player } from "./Player";
 
 export interface BulletState {
     id: number,
+    shooterId: number,
     positionX: number,
     positionY: number,
     velocityX: number,
@@ -14,25 +17,33 @@ export class Bullet {
     public static BULLET_VELOCITY = 1500;
 
     public radius: number = 42;
+    public damage: number = 0.22;
 
-    constructor(private game: Game, public state: BulletState) {
+    public constructor(private game: Game, public state: BulletState) {
 
     }
 
-    update(dt: number) {
+    public update(dt: number) {
         // Move bullet
         this.state.positionX += this.state.velocityX * dt;
         this.state.positionY += this.state.velocityY * dt;
 
-        // Check if collided with border
         if (this.game.isServer) {
+            // Check if collided with border
             if (Math.abs(this.state.positionX) > this.game.arenaSize / 2 || Math.abs(this.state.positionY) > this.game.arenaSize / 2) {
                 this.game.removeBullet(this.state.id);
+            }
+
+            // Check if collided with another player
+            for (let player of this.game.players) {
+                if (player.state.id != this.state.shooterId && Physics.checkCircleCollision(this.state.positionX, this.state.positionY, this.radius, player.state.positionX, player.state.positionY, player.radius)) {
+                    this._onPlayerCollision(player);
+                }
             }
         }
     }
 
-    render(client: Client, ctx: CanvasRenderingContext2D) {
+    public render(client: Client, ctx: CanvasRenderingContext2D) {
         ctx.save();
 
         ctx.translate(this.state.positionX, -this.state.positionY);
@@ -46,5 +57,10 @@ export class Bullet {
         ctx.restore();
 
         ctx.restore();
+    }
+
+    private _onPlayerCollision(player: Player) {
+        player.damage(this.damage, this.state.shooterId);
+        this.game.removeBullet(this.state.id);
     }
 }
