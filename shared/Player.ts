@@ -43,17 +43,17 @@ export class Player {
         // Draw body
         ctx.save();
         ctx.rotate(Math.atan2(-this.state.moveY, this.state.moveX) + Math.PI / 2);
-        let bodyWidth = client.assets.tankBody.width * client.assets.scaleFactor;
-        let bodyHeight = client.assets.tankBody.height * client.assets.scaleFactor;
-        ctx.drawImage(client.assets.tankBody, -bodyWidth / 2, -bodyHeight / 2, bodyWidth, bodyHeight);
+        let bodyWidth = client.assets.tankBodyRed.width * client.assets.scaleFactor;
+        let bodyHeight = client.assets.tankBodyRed.height * client.assets.scaleFactor;
+        ctx.drawImage(client.assets.tankBodyRed, -bodyWidth / 2, -bodyHeight / 2, bodyWidth, bodyHeight);
         ctx.restore();
 
         // Draw barrel
         ctx.save();
         ctx.rotate(this.state.aimDir + Math.PI / 2);
-        let barrelWidth = client.assets.tankBarrel.width * client.assets.scaleFactor;
-        let barrelHeight = client.assets.tankBarrel.height * client.assets.scaleFactor;
-        ctx.drawImage(client.assets.tankBarrel, -barrelWidth / 2, -barrelHeight * 0.75, barrelWidth, barrelHeight);
+        let barrelWidth = client.assets.tankBarrelRed.width * client.assets.scaleFactor;
+        let barrelHeight = client.assets.tankBarrelRed.height * client.assets.scaleFactor;
+        ctx.drawImage(client.assets.tankBarrelRed, -barrelWidth / 2, -barrelHeight * 0.75, barrelWidth, barrelHeight);
         ctx.restore();
 
 
