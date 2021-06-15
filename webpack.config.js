@@ -34,7 +34,7 @@ module.exports = {
         host: "127.0.0.1",
         port: 8080,
         sockHost: "127.0.0.1",
-        sockPort: 8081,
+        sockPort: 8080,
         hot: true,
         overlay: true,
         open: true,
