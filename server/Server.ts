@@ -12,7 +12,7 @@ export class Server {
     public rivet: RIVET.ServerApi;
 
     public constructor(public socketServer: SocketServer) {
-        this.game = new Game();
+        this.game = new Game(true);
 
         this.socketServer.on("connection", this._onConnection.bind(this));
 

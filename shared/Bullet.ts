@@ -20,8 +20,16 @@ export class Bullet {
     }
 
     update(dt: number) {
+        // Move bullet
         this.state.positionX += this.state.velocityX * dt;
         this.state.positionY += this.state.velocityY * dt;
+
+        // Check if collided with border
+        if (this.game.isServer) {
+            if (Math.abs(this.state.positionX) > this.game.arenaSize / 2 || Math.abs(this.state.positionY) > this.game.arenaSize / 2) {
+                this.game.removeBullet(this.state.id);
+            }
+        }
     }
 
     render(client: Client, ctx: CanvasRenderingContext2D) {

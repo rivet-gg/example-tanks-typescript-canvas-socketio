@@ -42,7 +42,7 @@ export class Connection {
     }
 
     private _onDisconnect() {
-        // TODO: Remove the player
+        if (this.currentPlayerId) this._server.game.removePlayer(this.currentPlayerId);
     }
 
     private _onJoin(cb: (playerId: number) => void) {

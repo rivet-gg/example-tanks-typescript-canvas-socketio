@@ -39,7 +39,7 @@ export class Client {
         this.input.onKeyDown("enter", this._joinGame.bind(this));
         this.input.onKeyDown(" ", this._shoot.bind(this));
 
-        this.game = new Game();
+        this.game = new Game(false);
         this.assets = new Assets();
 
         window.addEventListener("resize", this._resize.bind(this));

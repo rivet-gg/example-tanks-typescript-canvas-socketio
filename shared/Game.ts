@@ -18,7 +18,7 @@ export class Game {
 
     private _idCounter = 1;
 
-    constructor() {
+    constructor(public isServer: boolean) {
         
     }
 
@@ -30,6 +30,7 @@ export class Game {
     }
 
     public applyState(state: GameState) {
+        // Update and create entities
         for (let playerState of state.players) {
             let player = this.playerWithId(playerState.id);
             if (!player) {
@@ -39,7 +40,6 @@ export class Game {
                 player.state = playerState;
             }
         }
-
         for (let bulletState of state.bullets) {
             let bullet = this.bulletWithId(bulletState.id);
             if (!bullet) {
@@ -50,7 +50,13 @@ export class Game {
             }
         }
 
-        // TODO: Remove unknown players and bullets
+        // Remove all other entities
+        this.players
+            .filter(p1 => state.players.findIndex(p2 => p1.state.id == p2.id) == -1)
+            .forEach(p => this.removePlayer(p.state.id));
+        this.bullets
+            .filter(p1 => state.bullets.findIndex(p2 => p1.state.id == p2.id) == -1)
+            .forEach(p => this.removeBullet(p.state.id));
     }
 
     public generateId(): number {
@@ -94,6 +100,11 @@ export class Game {
         return player;
     }
 
+    public removePlayer(id: number) {
+        let idx = this.players.findIndex(p => p.state.id == id);
+        if (idx != -1) this.players.splice(idx, 1);
+    }
+
     public createBullet(): Bullet {
         let bullet = new Bullet(this, {
             id: this.generateId(),
@@ -104,6 +115,11 @@ export class Game {
         });
         this.bullets.push(bullet);
         return bullet;
+    }
+
+    public removeBullet(id: number) {
+        let idx = this.bullets.findIndex(p => p.state.id == id);
+        if (idx != -1) this.bullets.splice(idx, 1);
     }
 
     public playerWithId(id: number): Player | undefined {
