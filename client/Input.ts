@@ -24,12 +24,16 @@ export class Input {
         if (callbacks !== undefined) {
             callbacks.forEach(cb => cb(event))
         }
+
+        event.preventDefault();
     }
 
     private _keyUp(event: KeyboardEvent) {
         let key = event.key.toLowerCase();
 
         this._activeKeys.delete(key);
+
+        event.preventDefault();
     }
 
     private _mouseMove(event: MouseEvent) {
