@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "npm install; concurrently --kill-others \"npm:watch-server\" \"npm:watch-client\"",
+    "dev": "npm install && npx concurrently --kill-others \"npm:watch-server\" \"npm:watch-client\"",
     "watch-server": "nodemon -r dotenv/config --delay 1 --watch server --watch shared --ext ts --exec ts-node server/index.ts",
     "watch-client": "parcel client/index.html --host 0.0.0.0 --port 8080 --hmr-port 8081 --open",
     "build-client": "npx parcel build client/index.html --dist-dir dist",
