@@ -9,6 +9,8 @@ import { Utilities } from "../shared/Utilities";
 export class Client {
     public static shared: Client;
 
+    public static TITLE_TEXT: string = "Tanks";
+
     public canvas: HTMLCanvasElement;
 
     public input: Input;
@@ -215,8 +217,8 @@ export class Client {
             ctx.lineWidth = 30;
             ctx.font = Utilities.font(175, 900);
             let titleY = -this.screenHeight / 2 + 150;
-            ctx.strokeText("Tanks", 0, titleY);
-            ctx.fillText("Tanks", 0, titleY);
+            ctx.strokeText(Client.TITLE_TEXT, 0, titleY);
+            ctx.fillText(Client.TITLE_TEXT, 0, titleY);
             ctx.restore();
 
             // Render instructions
