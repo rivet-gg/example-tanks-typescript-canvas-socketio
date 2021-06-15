@@ -1,7 +1,7 @@
 const webpack = require("webpack");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const Dotenv = require("dotenv-webpack");
+const DotenvWebpackPlugin = require("dotenv-webpack");
 
 module.exports = {
     entry: {
@@ -31,7 +31,9 @@ module.exports = {
     devtool: "inline-source-map",
     devServer: {
         contentBase: path.join(__dirname, "dist"),
+        host: "127.0.0.1",
         port: 8080,
+        sockHost: "127.0.0.1",
         sockPort: 8081,
         hot: true,
         overlay: true,
@@ -42,7 +44,7 @@ module.exports = {
         poll: 1000,
     },
     plugins: [
-        new Dotenv(),
+        new DotenvWebpackPlugin(),
         new HtmlWebpackPlugin({
             inject: "head",
             template: path.join(__dirname, "client", "index.html"),
