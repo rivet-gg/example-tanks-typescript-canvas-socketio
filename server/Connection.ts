@@ -1,13 +1,13 @@
-import {Server} from "./Server";
-import {Socket} from "socket.io";
-import {Player} from "../shared/Player";
+import { Server } from "./Server";
+import { Socket } from "socket.io";
+import { Player } from "../shared/Player";
 
 export class Connection {
     public currentPlayerId?: number;
 
     public get currentPlayer(): Player | undefined {
         if (this.currentPlayerId) {
-            return this._server.game.playerWithId(this.currentPlayerId)
+            return this._server.game.playerWithId(this.currentPlayerId);
         } else {
             return undefined;
         }
@@ -18,10 +18,10 @@ export class Connection {
     }
 
     private async _onInit(playerToken: string, cb: () => void) {
-        console.log("player connecting");
+        console.log("Player connecting");
 
         this._socket.on("disconnect", () => {
-            this._server.rivet.playerDisconnected({ playerToken })
+            this._server.rivet.playerDisconnected({ playerToken });
         });
 
         try {
@@ -31,7 +31,7 @@ export class Connection {
             this._socket.disconnect();
         }
 
-        console.log("player registered");
+        console.log("Player registered");
 
         this._socket.on("disconnect", this._onDisconnect.bind(this));
         this._socket.on("join", this._onJoin.bind(this));
@@ -42,7 +42,8 @@ export class Connection {
     }
 
     private _onDisconnect() {
-        if (this.currentPlayerId) this._server.game.removePlayer(this.currentPlayerId);
+        if (this.currentPlayerId)
+            this._server.game.removePlayer(this.currentPlayerId);
     }
 
     private _onJoin(cb: (playerId: number) => void) {

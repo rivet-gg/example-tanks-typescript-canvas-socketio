@@ -1,9 +1,9 @@
 import { Input } from "./Input";
 import { Game } from "../shared/Game";
-import {Assets} from "./Assets";
-import {Player} from "../shared/Player";
+import { Assets } from "./Assets";
+import { Player } from "../shared/Player";
 import * as RIVET from "@rivet-gg/api-game";
-import {Connection} from "./Connection";
+import { Connection } from "./Connection";
 import { Utilities } from "../shared/Utilities";
 
 export class Client {
@@ -29,7 +29,7 @@ export class Client {
 
     public get currentPlayer(): Player | undefined {
         if (this.currentPlayerId) {
-            return this.game.playerWithId(this.currentPlayerId)
+            return this.game.playerWithId(this.currentPlayerId);
         } else {
             return undefined;
         }
@@ -39,7 +39,7 @@ export class Client {
         // Setup rendering
         this.canvas = document.getElementById("game") as any;
         this.assets = new Assets();
-        
+
         // Handle resizing
         window.addEventListener("resize", this._resize.bind(this));
         this._resize();
@@ -54,9 +54,11 @@ export class Client {
         this._update();
 
         // Create Rivet
-        this.rivet = new RIVET.ClientApi(new RIVET.Configuration({
-            accessToken: process.env.RIVET_CLIENT_TOKEN,
-        }));
+        this.rivet = new RIVET.ClientApi(
+            new RIVET.Configuration({
+                accessToken: process.env.RIVET_CLIENT_TOKEN,
+            })
+        );
         this._connect();
     }
 
@@ -106,7 +108,7 @@ export class Client {
             // Determine rotation
             let aimDir = Math.atan2(
                 this.input.mousePosition.y - this.canvas.clientHeight / 2,
-                this.input.mousePosition.x - this.canvas.clientWidth / 2,
+                this.input.mousePosition.x - this.canvas.clientWidth / 2
             );
 
             this.connection?.socket.emit("input", moveX, moveY, aimDir);
@@ -147,7 +149,7 @@ export class Client {
 
         // Center on the player (if needed)
         if (currentPlayer !== undefined) {
-            this.cameraOffsetX = currentPlayer.state.positionX
+            this.cameraOffsetX = currentPlayer.state.positionX;
             this.cameraOffsetY = -currentPlayer.state.positionY;
         } else {
             this.cameraOffsetX = 0;
@@ -170,14 +172,29 @@ export class Client {
 
     private _renderBackground(ctx: CanvasRenderingContext2D) {
         if (this.assets.tileSand.complete) {
-            let tileSize = this.assets.tileSand.height * this.assets.scaleFactor;
-            let tileXMin = Math.floor((this.cameraOffsetX - this.screenWidth / 2) / tileSize);
-            let tileXMax = Math.ceil((this.cameraOffsetX + this.screenWidth / 2) / tileSize);
-            let tileYMin = Math.floor((this.cameraOffsetY - this.game.viewportHeight / 2) / tileSize);
-            let tileYMax = Math.ceil((this.cameraOffsetY + this.game.viewportHeight / 2) / tileSize);
+            let tileSize =
+                this.assets.tileSand.height * this.assets.scaleFactor;
+            let tileXMin = Math.floor(
+                (this.cameraOffsetX - this.screenWidth / 2) / tileSize
+            );
+            let tileXMax = Math.ceil(
+                (this.cameraOffsetX + this.screenWidth / 2) / tileSize
+            );
+            let tileYMin = Math.floor(
+                (this.cameraOffsetY - this.game.viewportHeight / 2) / tileSize
+            );
+            let tileYMax = Math.ceil(
+                (this.cameraOffsetY + this.game.viewportHeight / 2) / tileSize
+            );
             for (let x = tileXMin; x <= tileXMax; x++) {
                 for (let y = tileYMin; y <= tileYMax; y++) {
-                    ctx.drawImage(this.assets.tileSand, x * tileSize, y * tileSize, tileSize, tileSize);
+                    ctx.drawImage(
+                        this.assets.tileSand,
+                        x * tileSize,
+                        y * tileSize,
+                        tileSize,
+                        tileSize
+                    );
                 }
             }
         }
@@ -186,20 +203,46 @@ export class Client {
     private _renderWall(ctx: CanvasRenderingContext2D) {
         if (this.assets.wall.complete) {
             let wallSize = this.assets.wall.width * this.assets.scaleFactor;
-            let paddedArenaSize = this.game.arenaSize + wallSize;  // Account for border image width along the outline
+            let paddedArenaSize = this.game.arenaSize + wallSize; // Account for border image width along the outline
             let idealSpacing = 60;
-            let wallCount = Math.floor(paddedArenaSize / idealSpacing)
+            let wallCount = Math.floor(paddedArenaSize / idealSpacing);
             for (let i = 0; i < wallCount; i++) {
-                let progress = -paddedArenaSize / 2 + i / (wallCount - 1) * paddedArenaSize;
+                let progress =
+                    -paddedArenaSize / 2 +
+                    (i / (wallCount - 1)) * paddedArenaSize;
 
                 // Top
-                ctx.drawImage(this.assets.wall, progress - wallSize / 2, -paddedArenaSize / 2 - wallSize / 2, wallSize, wallSize);
+                ctx.drawImage(
+                    this.assets.wall,
+                    progress - wallSize / 2,
+                    -paddedArenaSize / 2 - wallSize / 2,
+                    wallSize,
+                    wallSize
+                );
                 // Bottom
-                ctx.drawImage(this.assets.wall, progress - wallSize / 2, paddedArenaSize / 2 - wallSize / 2, wallSize, wallSize);
+                ctx.drawImage(
+                    this.assets.wall,
+                    progress - wallSize / 2,
+                    paddedArenaSize / 2 - wallSize / 2,
+                    wallSize,
+                    wallSize
+                );
                 // Left
-                ctx.drawImage(this.assets.wall, -paddedArenaSize / 2 - wallSize / 2, progress - wallSize / 2, wallSize, wallSize);
+                ctx.drawImage(
+                    this.assets.wall,
+                    -paddedArenaSize / 2 - wallSize / 2,
+                    progress - wallSize / 2,
+                    wallSize,
+                    wallSize
+                );
                 // Right
-                ctx.drawImage(this.assets.wall, paddedArenaSize / 2 - wallSize / 2, progress - wallSize / 2, wallSize, wallSize);
+                ctx.drawImage(
+                    this.assets.wall,
+                    paddedArenaSize / 2 - wallSize / 2,
+                    progress - wallSize / 2,
+                    wallSize,
+                    wallSize
+                );
             }
         }
     }
@@ -233,16 +276,30 @@ export class Client {
             ctx.textAlign = "left";
             ctx.textBaseline = "bottom";
             for (let i = 0; i < instructions.length; i++) {
-                ctx.fillText(instructions[i], -this.screenWidth / 2 + 20, this.screenHeight / 2 - 20 - (instructions.length - i - 1) * 50);
+                ctx.fillText(
+                    instructions[i],
+                    -this.screenWidth / 2 + 20,
+                    this.screenHeight / 2 -
+                        20 -
+                        (instructions.length - i - 1) * 50
+                );
             }
             ctx.restore();
         }
     }
 
-    private _renderFullscreenMessage(ctx: CanvasRenderingContext2D, message: string) {
+    private _renderFullscreenMessage(
+        ctx: CanvasRenderingContext2D,
+        message: string
+    ) {
         ctx.save();
         ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
-        ctx.fillRect(-this.screenWidth / 2, -this.screenHeight / 2, this.screenWidth, this.screenHeight);
+        ctx.fillRect(
+            -this.screenWidth / 2,
+            -this.screenHeight / 2,
+            this.screenWidth,
+            this.screenHeight
+        );
         ctx.restore();
 
         ctx.save();

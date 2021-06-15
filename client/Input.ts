@@ -4,7 +4,7 @@ export class Input {
     private _activeKeys: Set<string> = new Set();
     private _keyDownEvents: Map<string, Set<OnKeyDownCallback>> = new Map();
 
-    public mousePosition: { x: number, y: number } = { x:0, y: 0 };
+    public mousePosition: { x: number; y: number } = { x: 0, y: 0 };
 
     constructor() {
         window.addEventListener("keydown", this._keyDown.bind(this));
@@ -22,7 +22,7 @@ export class Input {
 
         let callbacks = this._keyDownEvents.get(key);
         if (callbacks !== undefined) {
-            callbacks.forEach(cb => cb(event))
+            callbacks.forEach((cb) => cb(event));
         }
 
         event.preventDefault();
@@ -46,7 +46,8 @@ export class Input {
     }
 
     public onKeyDown(key: string, callback: OnKeyDownCallback) {
-        if (!this._keyDownEvents.has(key)) this._keyDownEvents.set(key, new Set());
+        if (!this._keyDownEvents.has(key))
+            this._keyDownEvents.set(key, new Set());
         this._keyDownEvents.get(key)?.add(callback);
     }
 }

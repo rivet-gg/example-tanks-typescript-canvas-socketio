@@ -1,11 +1,11 @@
-import {Client} from "../client/Client";
-import {Bullet, BulletState} from "./Bullet";
-import {Player, PlayerState} from "./Player";
+import { Client } from "../client/Client";
+import { Bullet, BulletState } from "./Bullet";
+import { Player, PlayerState } from "./Player";
 import { Utilities } from "./Utilities";
 
 export interface GameState {
-    players: PlayerState[],
-    bullets: BulletState[],
+    players: PlayerState[];
+    bullets: BulletState[];
 }
 
 export class Game {
@@ -19,14 +19,12 @@ export class Game {
 
     private _idCounter: number = 1;
 
-    constructor(public isServer: boolean) {
-        
-    }
+    constructor(public isServer: boolean) {}
 
     public createState(): GameState {
         return {
-            players: this.players.map(p => p.state),
-            bullets: this.bullets.map(p => p.state),
+            players: this.players.map((p) => p.state),
+            bullets: this.bullets.map((p) => p.state),
         };
     }
 
@@ -53,11 +51,17 @@ export class Game {
 
         // Remove all other entities
         this.players
-            .filter(p1 => state.players.findIndex(p2 => p1.state.id == p2.id) == -1)
-            .forEach(p => this.removePlayer(p.state.id));
+            .filter(
+                (p1) =>
+                    state.players.findIndex((p2) => p1.state.id == p2.id) == -1
+            )
+            .forEach((p) => this.removePlayer(p.state.id));
         this.bullets
-            .filter(p1 => state.bullets.findIndex(p2 => p1.state.id == p2.id) == -1)
-            .forEach(p => this.removeBullet(p.state.id));
+            .filter(
+                (p1) =>
+                    state.bullets.findIndex((p2) => p1.state.id == p2.id) == -1
+            )
+            .forEach((p) => this.removeBullet(p.state.id));
     }
 
     public generateId(): number {
@@ -67,7 +71,7 @@ export class Game {
     public update() {
         // Determine the time since the last frame
         let now = Date.now();
-        let dt = (now - this.lastUpdateTimestamp) / 1000;  // Convert from milliseconds to seconds
+        let dt = (now - this.lastUpdateTimestamp) / 1000; // Convert from milliseconds to seconds
         this.lastUpdateTimestamp = now;
 
         // Update all entities
@@ -91,8 +95,16 @@ export class Game {
     public createPlayer(): Player {
         let player = new Player(this, {
             id: this.generateId(),
-            positionX: Utilities.lerp(-this.arenaSize / 2, this.arenaSize / 2, Math.random()),
-            positionY: Utilities.lerp(-this.arenaSize / 2, this.arenaSize / 2, Math.random()),
+            positionX: Utilities.lerp(
+                -this.arenaSize / 2,
+                this.arenaSize / 2,
+                Math.random()
+            ),
+            positionY: Utilities.lerp(
+                -this.arenaSize / 2,
+                this.arenaSize / 2,
+                Math.random()
+            ),
             aimDir: 0,
             moveX: 0,
             moveY: 0,
@@ -104,7 +116,7 @@ export class Game {
     }
 
     public removePlayer(id: number) {
-        let idx = this.players.findIndex(p => p.state.id == id);
+        let idx = this.players.findIndex((p) => p.state.id == id);
         if (idx != -1) this.players.splice(idx, 1);
     }
 
@@ -122,15 +134,15 @@ export class Game {
     }
 
     public removeBullet(id: number) {
-        let idx = this.bullets.findIndex(p => p.state.id == id);
+        let idx = this.bullets.findIndex((p) => p.state.id == id);
         if (idx != -1) this.bullets.splice(idx, 1);
     }
 
     public playerWithId(id: number): Player | undefined {
-        return this.players.find(player => player.state.id == id);
+        return this.players.find((player) => player.state.id == id);
     }
 
     public bulletWithId(id: number): Bullet | undefined {
-        return this.bullets.find(bullet => bullet.state.id == id);
+        return this.bullets.find((bullet) => bullet.state.id == id);
     }
 }
