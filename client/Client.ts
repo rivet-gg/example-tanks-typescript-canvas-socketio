@@ -304,7 +304,7 @@ export class Client {
 
         ctx.save();
         ctx.fillStyle = "white";
-        ctx.fillText("Press Enter to join", 0, 0);
+        ctx.fillText(message, 0, 0);
         ctx.restore();
     }
 }
