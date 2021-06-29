@@ -15,7 +15,10 @@ export class Connection {
         // Prefer TLS-enabled port but fall back to default port for development
         let port = lobby.ports.find(x => x.isTls) || lobby.ports[0];
 
-        this.socket = io(`${port.hostname}:${port.source}`);
+        this.socket = io(`${port.hostname}:${port.source}`, {
+            transports: ["websocket"],
+            reconnection: false,
+        });
         this.socket.on(
             "connect",
             this._onConnect.bind(this, lobby.player.token)
