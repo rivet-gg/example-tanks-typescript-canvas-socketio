@@ -12,7 +12,10 @@ export class Connection {
         private _client: Client,
         public lobby: RIVET.MatchmakerLobby
     ) {
-        this.socket = io(`${lobby.ports[0].hostname}:${lobby.ports[0].source}`);
+        // Prefer TLS-enabled port but fall back to default port for development
+        let port = lobby.ports.find(x => x.isTls) || lobby.ports[0];
+
+        this.socket = io(`${port.hostname}:${port.source}`);
         this.socket.on(
             "connect",
             this._onConnect.bind(this, lobby.player.token)
