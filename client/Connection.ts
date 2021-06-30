@@ -17,7 +17,8 @@ export class Connection {
 
         this.socket = io(`${port.hostname}:${port.source}`, {
             transports: ["websocket"],
-            reconnection: false,
+            reconnectionDelay: 250,
+            reconnectionDelayMax: 1000,
         });
         this.socket.on(
             "connect",
