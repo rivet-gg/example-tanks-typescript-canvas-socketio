@@ -6,6 +6,7 @@ import { GameState } from "../shared/Game";
 export class Connection {
     public socket: Socket;
 
+    public isDisconnected: boolean = false;
     public isConnected: boolean = false;
 
     public constructor(
@@ -29,6 +30,8 @@ export class Connection {
     }
 
     private _onConnect() {
+        this.isDisconnected = false;
+
         console.log("Initiating...");
         this.socket.emit(
             "init",
@@ -47,6 +50,7 @@ export class Connection {
     }
 
     private _onDisconnect() {
+        this.isDisconnected = true;
         this.isConnected = false;
     }
 }

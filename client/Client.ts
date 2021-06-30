@@ -248,7 +248,9 @@ export class Client {
     }
 
     private _renderMenu(ctx: CanvasRenderingContext2D) {
-        if (!this.connection?.isConnected) {
+        if (this.connection?.isDisconnected) {
+            this._renderFullscreenMessage(ctx, "Disconnected.");
+        } else if (!this.connection?.isConnected) {
             this._renderFullscreenMessage(ctx, "Connecting...");
         } else if (!this.currentPlayer) {
             this._renderFullscreenMessage(ctx, "Press Enter to join");
