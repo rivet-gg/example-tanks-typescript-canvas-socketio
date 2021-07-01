@@ -6,7 +6,6 @@ export class Connection {
     public currentPlayerId?: number;
 
     public get currentPlayer(): PlayerState | undefined {
-        console.log(this.currentPlayerId);
         if (this.currentPlayerId) {
             return this._server.game.state.players[this.currentPlayerId];
         } else {
