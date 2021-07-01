@@ -1,4 +1,5 @@
 import { Client } from "../client/Client";
+import { BarrelState, createBarrel } from "./Barrel";
 import { BulletState, updateBullet } from "./Bullet";
 import { EntityState } from "./Entity";
 import { PlayerState, updatePlayer } from "./Player";
@@ -18,10 +19,11 @@ export interface Game {
 export interface GameState {
     players: { [id: number]: PlayerState };
     bullets: { [id: number]: BulletState };
+    barrels: { [id: number]: BarrelState };
 }
 
 export function createGame(isServer: boolean): Game {
-    return {
+    let game = {
         isServer: isServer,
         lastUpdateTimestamp: Date.now(),
         idCounter: 1,
@@ -32,8 +34,20 @@ export function createGame(isServer: boolean): Game {
         state: {
             players: {},
             bullets: {},
+            barrels: {},
         },
     };
+
+    // Procedurally create barrels
+    if (isServer) {
+        for (let i = 0; i++; i < 6) {
+            let positionX = Utilities.lerp(-1000, 1000, Math.random());
+            let positionY = Utilities.lerp(-1000, 1000, Math.random());
+            createBarrel(game, positionX, positionY);
+        }
+    }
+
+    return game;
 }
 
 export function generateId(game: Game): number {
