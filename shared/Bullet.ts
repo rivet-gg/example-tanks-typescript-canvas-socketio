@@ -11,6 +11,7 @@ export interface BulletState extends EntityState {
     positionY: number;
     velocityX: number;
     velocityY: number;
+    bounces: number;
 }
 
 const BULLET_VELOCITY: number = 1500;
@@ -34,26 +35,37 @@ export function createBullet(
         positionY: positionY,
         velocityX: velocityX,
         velocityY: velocityY,
+        bounces: 0,
     };
     game.state.bullets[state.id] = state;
     return state;
 }
 
 export function updateBullet(game: Game, state: BulletState, dt: number) {
+    //state.velocityY -= 5000 * dt;
+
     // Move bullet
     state.positionX += state.velocityX * dt;
     state.positionY += state.velocityY * dt;
 
-    if (game.isServer) {
-        // Check if collided with border
-        if (
-            Math.abs(state.positionX) > game.arenaSize / 2 ||
-            Math.abs(state.positionY) > game.arenaSize / 2
-        ) {
-            delete game.state.bullets[state.id];
-            return;
-        }
+    if (state.positionX > game.arenaSize / 2) {
+        state.velocityX = -Math.abs(state.velocityX)
+        didBounce(game,state)
+    }
+    if (state.positionX < -game.arenaSize / 2) {
+        state.velocityX = Math.abs(state.velocityX)
+        didBounce(game,state)
+    }
+    if (state.positionY > game.arenaSize / 2) {
+        state.velocityY = -Math.abs(state.velocityX)
+        didBounce(game,state)
+    }
+    if (state.positionY < -game.arenaSize / 2) {
+        state.velocityY = Math.abs(state.velocityX)
+        didBounce(game,state)
+    }
 
+    if (game.isServer) {
         // Check if collided with another player
         for (let playerId in game.state.players) {
             let player = game.state.players[playerId];
@@ -108,4 +120,12 @@ function onPlayerCollision(
 ) {
     damagePlayer(game, player, BULLET_DAMAGE, state.shooterId);
     delete game.state.bullets[state.id];
+}
+
+function didBounce(game: Game, state: BulletState) {
+    state.bounces += 1;
+
+    if (state.bounces > 1) {
+        delete game.state.bullets[state.id];
+    }
 }
