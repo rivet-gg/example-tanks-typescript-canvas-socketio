@@ -1,8 +1,8 @@
 import * as RIVET from "@rivet-gg/api-game";
 import fetch from "node-fetch";
-import { Connection } from "./Connection";
-import { Game } from "../shared/Game";
+import { createGame, Game, updateGame } from "../shared/Game";
 import { Server as SocketServer, Socket } from "socket.io";
+import { Connection } from "./Connection";
 
 export class Server {
     public static shared: Server;
@@ -12,7 +12,7 @@ export class Server {
     public rivet: RIVET.ServerApi;
 
     public constructor(public socketServer: SocketServer) {
-        this.game = new Game(true);
+        this.game = createGame(true);
 
         this.socketServer.on("connection", this._onConnection.bind(this));
 
@@ -39,9 +39,9 @@ export class Server {
 
     private _update() {
         // Update the game
-        this.game.update();
+        updateGame(this.game);
 
         // Broadcast the state
-        this.socketServer.emit("update", this.game.createState());
+        this.socketServer.emit("update", this.game.state);
     }
 }

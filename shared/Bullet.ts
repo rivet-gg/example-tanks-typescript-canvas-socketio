@@ -1,9 +1,10 @@
 import { Client } from "../client/Client";
-import { Game } from "./Game";
-import { Physics } from "./Physics";
-import { Player } from "./Player";
+import { EntityState } from "./Entity";
+import { Game, generateId } from "./Game";
+import { checkCircleCollision } from "./Physics";
+import { damagePlayer, PlayerState, PLAYER_RADIUS } from "./Player";
 
-export interface BulletState {
+export interface BulletState extends EntityState {
     id: number;
     shooterId: number;
     positionX: number;
@@ -12,76 +13,99 @@ export interface BulletState {
     velocityY: number;
 }
 
-export class Bullet {
-    public static BULLET_VELOCITY: number = 1500;
+const BULLET_VELOCITY: number = 1500;
+const BULLET_RADIUS: number = 42;
+const BULLET_DAMAGE: number = 0.22;
 
-    public radius: number = 42;
-    public damage: number = 0.22;
+export function createBullet(
+    game: Game,
+    shooterId: number,
+    positionX: number,
+    positionY: number,
+    dir: number
+): BulletState {
+    let velocityX = Math.cos(dir) * BULLET_VELOCITY;
+    let velocityY = Math.sin(dir) * BULLET_VELOCITY;
 
-    public constructor(private game: Game, public state: BulletState) {}
+    let state = {
+        id: generateId(game),
+        shooterId: shooterId,
+        positionX: positionX,
+        positionY: positionY,
+        velocityX: velocityX,
+        velocityY: velocityY,
+    };
+    game.state.bullets[state.id] = state;
+    return state;
+}
 
-    public update(dt: number) {
-        // Move bullet
-        this.state.positionX += this.state.velocityX * dt;
-        this.state.positionY += this.state.velocityY * dt;
+export function updateBullet(game: Game, state: BulletState, dt: number) {
+    // Move bullet
+    state.positionX += state.velocityX * dt;
+    state.positionY += state.velocityY * dt;
 
-        if (this.game.isServer) {
-            // Check if collided with border
+    if (game.isServer) {
+        // Check if collided with border
+        if (
+            Math.abs(state.positionX) > game.arenaSize / 2 ||
+            Math.abs(state.positionY) > game.arenaSize / 2
+        ) {
+            delete game.state.bullets[state.id];
+            return;
+        }
+
+        // Check if collided with another player
+        for (let playerId in game.state.players) {
+            let player = game.state.players[playerId];
             if (
-                Math.abs(this.state.positionX) > this.game.arenaSize / 2 ||
-                Math.abs(this.state.positionY) > this.game.arenaSize / 2
+                player.id != state.shooterId &&
+                checkCircleCollision(
+                    state.positionX,
+                    state.positionY,
+                    BULLET_RADIUS,
+                    player.positionX,
+                    player.positionY,
+                    PLAYER_RADIUS
+                )
             ) {
-                this.game.removeBullet(this.state.id);
-            }
-
-            // Check if collided with another player
-            for (let player of this.game.players) {
-                if (
-                    player.state.id != this.state.shooterId &&
-                    Physics.checkCircleCollision(
-                        this.state.positionX,
-                        this.state.positionY,
-                        this.radius,
-                        player.state.positionX,
-                        player.state.positionY,
-                        player.radius
-                    )
-                ) {
-                    this._onPlayerCollision(player);
-                }
+                onPlayerCollision(game, state, player);
+                return;
             }
         }
     }
+}
 
-    public render(client: Client, ctx: CanvasRenderingContext2D) {
-        ctx.save();
+export function renderBullet(
+    client: Client,
+    state: BulletState,
+    ctx: CanvasRenderingContext2D
+) {
+    ctx.save();
 
-        ctx.translate(this.state.positionX, -this.state.positionY);
+    ctx.translate(state.positionX, -state.positionY);
 
-        // Draw bullet
-        ctx.save();
-        ctx.rotate(
-            Math.atan2(-this.state.velocityY, this.state.velocityX) +
-                Math.PI / 2
-        );
-        let bulletWidth =
-            client.assets.bullet.width * client.assets.scaleFactor;
-        let bulletHeight =
-            client.assets.bullet.height * client.assets.scaleFactor;
-        ctx.drawImage(
-            client.assets.bullet,
-            -bulletWidth / 2,
-            -bulletHeight / 2,
-            bulletWidth,
-            bulletHeight
-        );
-        ctx.restore();
+    // Draw bullet
+    ctx.save();
+    ctx.rotate(Math.atan2(-state.velocityY, state.velocityX) + Math.PI / 2);
+    let bulletWidth = client.assets.bullet.width * client.assets.scaleFactor;
+    let bulletHeight = client.assets.bullet.height * client.assets.scaleFactor;
+    ctx.drawImage(
+        client.assets.bullet,
+        -bulletWidth / 2,
+        -bulletHeight / 2,
+        bulletWidth,
+        bulletHeight
+    );
+    ctx.restore();
 
-        ctx.restore();
-    }
+    ctx.restore();
+}
 
-    private _onPlayerCollision(player: Player) {
-        player.damage(this.damage, this.state.shooterId);
-        this.game.removeBullet(this.state.id);
-    }
+function onPlayerCollision(
+    game: Game,
+    state: BulletState,
+    player: PlayerState
+) {
+    damagePlayer(game, player, BULLET_DAMAGE, state.shooterId);
+    delete game.state.bullets[state.id];
 }

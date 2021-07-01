@@ -1,13 +1,14 @@
 import { Server } from "./Server";
 import { Socket } from "socket.io";
-import { Player } from "../shared/Player";
+import { createPlayer, PlayerState, shoot } from "../shared/Player";
 
 export class Connection {
     public currentPlayerId?: number;
 
-    public get currentPlayer(): Player | undefined {
+    public get currentPlayer(): PlayerState | undefined {
+        console.log(this.currentPlayerId);
         if (this.currentPlayerId) {
-            return this._server.game.playerWithId(this.currentPlayerId);
+            return this._server.game.state.players[this.currentPlayerId];
         } else {
             return undefined;
         }
@@ -43,19 +44,20 @@ export class Connection {
 
     private _onDisconnect() {
         if (this.currentPlayerId)
-            this._server.game.removePlayer(this.currentPlayerId);
+            delete this._server.game.state.players[this.currentPlayerId];
     }
 
     private _onJoin(cb: (playerId: number) => void) {
         if (!this.currentPlayer) {
-            let player = this._server.game.createPlayer();
-            this.currentPlayerId = player.state.id;
-            cb(player.state.id);
+            let player = createPlayer(this._server.game);
+            this.currentPlayerId = player.id;
+            cb(player.id);
         }
     }
 
     private _onShoot() {
-        this.currentPlayer?.shoot();
+        let player = this.currentPlayer;
+        if (player) shoot(this._server.game, player);
     }
 
     private _onInput(moveX: number, moveY: number, aimDir: number) {
@@ -71,8 +73,8 @@ export class Connection {
         }
 
         // Update the player's state
-        currentPlayer.state.moveX = moveX;
-        currentPlayer.state.moveY = moveY;
-        currentPlayer.state.aimDir = aimDir;
+        currentPlayer.moveX = moveX;
+        currentPlayer.moveY = moveY;
+        currentPlayer.aimDir = aimDir;
     }
 }

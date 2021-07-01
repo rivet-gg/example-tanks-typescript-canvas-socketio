@@ -1,9 +1,10 @@
 import { Client } from "../client/Client";
-import { Game } from "./Game";
-import { Bullet } from "../shared/Bullet";
+import { Game, generateId } from "./Game";
 import { Utilities } from "./Utilities";
+import { EntityState } from "./Entity";
+import { BulletState, createBullet } from "./Bullet";
 
-export interface PlayerState {
+export interface PlayerState extends EntityState {
     id: number;
     positionX: number;
     positionY: number;
@@ -14,150 +15,169 @@ export interface PlayerState {
     score: number;
 }
 
-export class Player {
-    public moveSpeed: number = 500;
-    public radius: number = 76;
-    public barrelLength: number = 45;
+export const PLAYER_MOVE_SPEED: number = 500;
+export const PLAYER_RADIUS: number = 76;
+export const BARREL_LENGTH: number = 45;
 
-    public constructor(private game: Game, public state: PlayerState) {}
+export function createPlayer(game: Game): PlayerState {
+    let state = {
+        id: generateId(game),
+        positionX: Utilities.lerp(
+            -game.arenaSize / 2,
+            game.arenaSize / 2,
+            Math.random()
+        ),
+        positionY: Utilities.lerp(
+            -game.arenaSize / 2,
+            game.arenaSize / 2,
+            Math.random()
+        ),
+        aimDir: 0,
+        moveX: 0,
+        moveY: 0,
+        health: 1,
+        score: 0,
+    };
+    game.state.players[state.id] = state;
+    return state;
+}
 
-    public update(dt: number) {
-        // Move the player based on the move input
-        this.state.positionX += this.state.moveX * this.moveSpeed * dt;
-        this.state.positionY += this.state.moveY * this.moveSpeed * dt;
+export function updatePlayer(game: Game, state: PlayerState, dt: number) {
+    // Move the player based on the move input
+    state.positionX += state.moveX * PLAYER_MOVE_SPEED * dt;
+    state.positionY += state.moveY * PLAYER_MOVE_SPEED * dt;
 
-        // Restrain to bounds
-        this.state.positionX = Math.max(
-            this.state.positionX,
-            -this.game.arenaSize / 2 + this.radius
-        );
-        this.state.positionX = Math.min(
-            this.state.positionX,
-            this.game.arenaSize / 2 - this.radius
-        );
-        this.state.positionY = Math.max(
-            this.state.positionY,
-            -this.game.arenaSize / 2 + this.radius
-        );
-        this.state.positionY = Math.min(
-            this.state.positionY,
-            this.game.arenaSize / 2 - this.radius
-        );
+    // Restrain to bounds
+    state.positionX = Math.max(
+        state.positionX,
+        -game.arenaSize / 2 + PLAYER_RADIUS
+    );
+    state.positionX = Math.min(
+        state.positionX,
+        game.arenaSize / 2 - PLAYER_RADIUS
+    );
+    state.positionY = Math.max(
+        state.positionY,
+        -game.arenaSize / 2 + PLAYER_RADIUS
+    );
+    state.positionY = Math.min(
+        state.positionY,
+        game.arenaSize / 2 - PLAYER_RADIUS
+    );
+}
+
+export function renderPlayer(
+    client: Client,
+    state: PlayerState,
+    ctx: CanvasRenderingContext2D
+) {
+    ctx.save();
+
+    ctx.translate(state.positionX, -state.positionY);
+
+    // Draw body
+    ctx.save();
+    ctx.rotate(Math.atan2(-state.moveY, state.moveX) + Math.PI / 2);
+    let bodyWidth = client.assets.tankBodyRed.width * client.assets.scaleFactor;
+    let bodyHeight =
+        client.assets.tankBodyRed.height * client.assets.scaleFactor;
+    ctx.drawImage(
+        client.assets.tankBodyRed,
+        -bodyWidth / 2,
+        -bodyHeight / 2,
+        bodyWidth,
+        bodyHeight
+    );
+    ctx.restore();
+
+    // Draw barrel
+    ctx.save();
+    ctx.rotate(state.aimDir + Math.PI / 2);
+    let barrelWidth =
+        client.assets.tankBarrelRed.width * client.assets.scaleFactor;
+    let barrelHeight =
+        client.assets.tankBarrelRed.height * client.assets.scaleFactor;
+    ctx.drawImage(
+        client.assets.tankBarrelRed,
+        -barrelWidth / 2,
+        -barrelHeight * 0.75,
+        barrelWidth,
+        barrelHeight
+    );
+    ctx.restore();
+
+    // Draw health
+    let healthY = -PLAYER_RADIUS - 5;
+    let healthWidth = 80;
+    let healthHeight = 10;
+    let healthPadding = 4;
+    ctx.save();
+    ctx.fillStyle = "#333";
+    ctx.fillRect(
+        -healthWidth / 2 - healthPadding,
+        healthY - healthHeight / 2 - healthPadding,
+        healthWidth + healthPadding * 2,
+        healthHeight + healthPadding * 2
+    );
+    ctx.fillStyle = "white";
+    ctx.fillRect(
+        -healthWidth / 2,
+        healthY - healthHeight / 2,
+        healthWidth * state.health,
+        healthHeight
+    );
+    ctx.restore();
+
+    // Draw score
+    let scoreY = healthY - 25;
+    ctx.save();
+    ctx.fillStyle = "white";
+    ctx.strokeStyle = "#333";
+    ctx.lineWidth = 6;
+    ctx.font = Utilities.font(32, 700);
+    ctx.strokeText(state.score.toString(), 0, scoreY);
+    ctx.fillText(state.score.toString(), 0, scoreY);
+    ctx.restore();
+
+    ctx.restore();
+}
+
+export function shoot(game: Game, state: PlayerState): BulletState {
+    let dirX = Math.cos(state.aimDir);
+    let dirY = -Math.sin(state.aimDir);
+
+    let bulletX = state.positionX + dirX * BARREL_LENGTH;
+    let bulletY = state.positionY + dirY * BARREL_LENGTH;
+    return createBullet(
+        game,
+        state.id,
+        bulletX,
+        bulletY,
+        Math.atan2(dirY, dirX)
+    );
+}
+
+export function damagePlayer(
+    game: Game,
+    state: PlayerState,
+    amount: number,
+    damagerId?: number
+) {
+    state.health -= amount;
+    if (state.health <= 0) {
+        onPlayerKill(game, state, damagerId);
     }
+}
 
-    public render(client: Client, ctx: CanvasRenderingContext2D) {
-        ctx.save();
-
-        ctx.translate(this.state.positionX, -this.state.positionY);
-
-        // Draw body
-        ctx.save();
-        ctx.rotate(
-            Math.atan2(-this.state.moveY, this.state.moveX) + Math.PI / 2
-        );
-        let bodyWidth =
-            client.assets.tankBodyRed.width * client.assets.scaleFactor;
-        let bodyHeight =
-            client.assets.tankBodyRed.height * client.assets.scaleFactor;
-        ctx.drawImage(
-            client.assets.tankBodyRed,
-            -bodyWidth / 2,
-            -bodyHeight / 2,
-            bodyWidth,
-            bodyHeight
-        );
-        ctx.restore();
-
-        // Draw barrel
-        ctx.save();
-        ctx.rotate(this.state.aimDir + Math.PI / 2);
-        let barrelWidth =
-            client.assets.tankBarrelRed.width * client.assets.scaleFactor;
-        let barrelHeight =
-            client.assets.tankBarrelRed.height * client.assets.scaleFactor;
-        ctx.drawImage(
-            client.assets.tankBarrelRed,
-            -barrelWidth / 2,
-            -barrelHeight * 0.75,
-            barrelWidth,
-            barrelHeight
-        );
-        ctx.restore();
-
-        // Draw health
-        let healthY = -this.radius - 5;
-        let healthWidth = 80;
-        let healthHeight = 10;
-        let healthPadding = 4;
-        ctx.save();
-        ctx.fillStyle = "#333";
-        ctx.fillRect(
-            -healthWidth / 2 - healthPadding,
-            healthY - healthHeight / 2 - healthPadding,
-            healthWidth + healthPadding * 2,
-            healthHeight + healthPadding * 2
-        );
-        ctx.fillStyle = "white";
-        ctx.fillRect(
-            -healthWidth / 2,
-            healthY - healthHeight / 2,
-            healthWidth * this.state.health,
-            healthHeight
-        );
-        ctx.restore();
-
-        // Draw score
-        let scoreY = healthY - 25;
-        ctx.save();
-        ctx.fillStyle = "white";
-        ctx.strokeStyle = "#333";
-        ctx.lineWidth = 6;
-        ctx.font = Utilities.font(32, 700);
-        ctx.strokeText(this.state.score.toString(), 0, scoreY);
-        ctx.fillText(this.state.score.toString(), 0, scoreY);
-        ctx.restore();
-
-        ctx.restore();
-    }
-
-    public shoot() {
-        let dirX = Math.cos(this.state.aimDir);
-        let dirY = -Math.sin(this.state.aimDir);
-
-        let bullet = this.game.createBullet(this.state.id);
-
-        // Position at the end of the barrel
-        bullet.state.positionX =
-            this.state.positionX + dirX * this.barrelLength;
-        bullet.state.positionY =
-            this.state.positionY + dirY * this.barrelLength;
-
-        // Set the velocity to the direction of the barrel
-        bullet.state.velocityX = dirX * Bullet.BULLET_VELOCITY;
-        bullet.state.velocityY = dirY * Bullet.BULLET_VELOCITY;
-    }
-
-    public damage(amount: number, damagerId?: number) {
-        this.state.health -= amount;
-        if (this.state.health <= 0) {
-            this._onKill(damagerId);
+function onPlayerKill(game: Game, state: PlayerState, killerId?: number) {
+    // Give points to the killer
+    if (killerId) {
+        let killer = game.state.players[killerId];
+        if (killer) {
+            killer.score += 1;
         }
     }
 
-    public score(points: number) {
-        this.state.score += points;
-    }
-
-    private _onKill(killerId?: number) {
-        // Give points to the killer
-        if (killerId) {
-            let killer = this.game.playerWithId(killerId);
-            if (killer) {
-                killer.score(1);
-            }
-        }
-
-        // Remove this player
-        this.game.removePlayer(this.state.id);
-    }
+    // Remove this player
+    delete game.state.players[state.id];
 }

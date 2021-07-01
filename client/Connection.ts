@@ -14,7 +14,7 @@ export class Connection {
         public lobby: RIVET.MatchmakerLobby
     ) {
         // Prefer TLS-enabled port but fall back to default port for development
-        let port = lobby.ports.find(x => x.isTls) || lobby.ports[0];
+        let port = lobby.ports.find((x) => x.isTls) || lobby.ports[0];
 
         this.socket = io(`${port.hostname}:${port.source}`, {
             transports: ["websocket"],
@@ -46,7 +46,7 @@ export class Connection {
     }
 
     private _onUpdate(state: GameState) {
-        this._client.game.applyState(state);
+        this._client.game.state = state;
     }
 
     private _onDisconnect() {
