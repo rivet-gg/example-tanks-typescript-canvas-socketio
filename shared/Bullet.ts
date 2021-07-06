@@ -15,7 +15,7 @@ export interface BulletState extends EntityState {
 }
 
 const BULLET_VELOCITY: number = 1500;
-const BULLET_RADIUS: number = 42;
+export const BULLET_RADIUS: number = 42;
 const BULLET_DAMAGE: number = 0.22;
 
 export function createBullet(

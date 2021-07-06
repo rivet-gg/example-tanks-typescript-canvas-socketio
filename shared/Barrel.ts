@@ -1,4 +1,5 @@
 import { Client } from "../client/Client";
+import { BulletState, BULLET_RADIUS } from "./Bullet";
 import { EntityState } from "./Entity";
 import { Game, generateId } from "./Game";
 import { checkCircleCollision } from "./Physics";
@@ -8,6 +9,7 @@ export interface BarrelState extends EntityState {
     id: number;
     positionX: number;
     positionY: number;
+    health: number;
 }
 
 const BARREL_RADIUS: number = 24;
@@ -21,6 +23,7 @@ export function createBarrel(
         id: generateId(game),
         positionX: positionX,
         positionY: positionY,
+        health: 2,
     };
     game.state.barrels[state.id] = state;
     return state;
@@ -40,6 +43,22 @@ export function updateBarrel(game: Game, state: BarrelState, dt: number) {
             )
         ) {
             onPlayerCollide(game, state, player);
+        }
+    }
+
+    for (let bulletId in game.state.bullets) {
+        let bullet = game.state.bullets[bulletId];
+        if (
+            checkCircleCollision(
+                state.positionX,
+                state.positionY,
+                BARREL_RADIUS,
+                bullet.positionX,
+                bullet.positionY,
+                BULLET_RADIUS
+            )
+        ) {
+            onBulletCollision(game, state, bullet);
         }
     }
 }
@@ -73,4 +92,19 @@ function onPlayerCollide(game: Game, state: BarrelState, player: PlayerState) {
     let offset = BARREL_RADIUS + PLAYER_RADIUS;
     player.positionX = state.positionX + (dirX / mag) * offset;
     player.positionY = state.positionY + (dirY / mag) * offset;
+}
+
+function onBulletCollision(
+    game: Game,
+    state: BarrelState,
+    bullet: BulletState
+) {
+    delete game.state.bullets[bullet.id];
+
+    if (game.isServer) {
+        state.health -= 1;
+        if (state.health <= 0) {
+            delete game.state.barrels[state.id];
+        }
+    }
 }
