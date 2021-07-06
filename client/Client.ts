@@ -6,6 +6,7 @@ import * as RIVET from "@rivet-gg/api-game";
 import { Connection } from "./Connection";
 import { Utilities } from "../shared/Utilities";
 import { renderBullet } from "../shared/Bullet";
+import { renderBarrel } from "../shared/Barrel";
 
 const TITLE_TEXT: string = "Tanks!";
 
@@ -328,5 +329,8 @@ function renderGame(client: Client, ctx: CanvasRenderingContext2D) {
     }
     for (let bulletId in client.game.state.bullets) {
         renderBullet(client, client.game.state.bullets[bulletId], ctx);
+    }
+    for (let barrelId in client.game.state.barrels) {
+        renderBarrel(client, client.game.state.barrels[barrelId], ctx);
     }
 }

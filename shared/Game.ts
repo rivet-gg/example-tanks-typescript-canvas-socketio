@@ -40,7 +40,7 @@ export function createGame(isServer: boolean): Game {
 
     // Procedurally create barrels
     if (isServer) {
-        for (let i = 0; i++; i < 6) {
+        for (let i = 0; i < 16; i++) {
             let positionX = Utilities.lerp(-1000, 1000, Math.random());
             let positionY = Utilities.lerp(-1000, 1000, Math.random());
             createBarrel(game, positionX, positionY);
