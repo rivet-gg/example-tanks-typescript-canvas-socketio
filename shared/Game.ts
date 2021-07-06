@@ -1,5 +1,5 @@
 import { Client } from "../client/Client";
-import { BarrelState, createBarrel } from "./Barrel";
+import { BarrelState, createBarrel, updateBarrel } from "./Barrel";
 import { BulletState, updateBullet } from "./Bullet";
 import { EntityState } from "./Entity";
 import { PlayerState, updatePlayer } from "./Player";
@@ -66,5 +66,8 @@ export function updateGame(game: Game) {
     }
     for (let bulletId in game.state.bullets) {
         updateBullet(game, game.state.bullets[bulletId], dt);
+    }
+    for (let barrelId in game.state.barrels) {
+        updateBarrel(game, game.state.barrels[barrelId], dt);
     }
 }
