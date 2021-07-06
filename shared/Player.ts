@@ -16,7 +16,7 @@ export interface PlayerState extends EntityState {
 }
 
 export const PLAYER_MOVE_SPEED: number = 500;
-export const PLAYER_RADIUS: number = 76;
+export const PLAYER_RADIUS: number = 38;
 export const BARREL_LENGTH: number = 45;
 
 export function createPlayer(game: Game): PlayerState {
