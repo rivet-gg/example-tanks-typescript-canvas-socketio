@@ -7,6 +7,7 @@ import { Connection } from "./Connection";
 import { Utilities } from "../shared/Utilities";
 import { renderBullet } from "../shared/Bullet";
 import { renderBarrel } from "../shared/barrel";
+import { renderExplosion } from "../shared/explosion";
 
 const TITLE_TEXT: string = "Tanks!";
 
@@ -332,5 +333,8 @@ function renderGame(client: Client, ctx: CanvasRenderingContext2D) {
     }
     for (let barrelId in client.game.state.barrels) {
         renderBarrel(client, client.game.state.barrels[barrelId], ctx);
+    }
+    for (let explosionID in client.game.state.explosion) {
+        renderExplosion(client, client.game.state.explosion[explosionID], ctx);
     }
 }
