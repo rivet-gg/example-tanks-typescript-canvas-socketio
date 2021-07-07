@@ -6,12 +6,8 @@ import { Game, generateId } from "./Game";
 import { checkCircleCollision } from "./Physics";
 import { PlayerState, PLAYER_RADIUS } from "./Player";
 
-
-
-
 //const BARREL_RADIUS: number = 24;
-export const BARREL_RADIUS: number = 42
-
+export const BARREL_RADIUS: number = 42;
 
 export interface BarrelState extends EntityState {
     id: number;
@@ -20,34 +16,26 @@ export interface BarrelState extends EntityState {
     health: number;
 }
 
-
-
-
-
-
 export function createBarrel(
-    game: Game, 
-    positionX: number, 
+    game: Game,
+    positionX: number,
     positionY: number
-    ): BarrelState {
-        let state = {
-            id: generateId(game),
-            positionX: positionX,
-            positionY: positionY,
-            health: 2,
-        };
-        game.state.barrels[state.id] = state;
-        return state;
+): BarrelState {
+    let state = {
+        id: generateId(game),
+        positionX: positionX,
+        positionY: positionY,
+        health: 2,
+    };
+    game.state.barrels[state.id] = state;
+    return state;
 }
-
 
 export function renderBarrel(
     client: Client,
     state: BarrelState,
     ctx: CanvasRenderingContext2D
 ) {
-
-
     // Draw bullet
     ctx.save();
     ctx.translate(state.positionX, -state.positionY);
@@ -61,16 +49,13 @@ export function renderBarrel(
         barrelHeight
     );
     ctx.restore();
-
-
 }
 
 export function onPlayerCollide(
     game: Game,
     state: BarrelState,
     player: PlayerState
-
-){
+) {
     let dirX = player.positionX - state.positionX;
     let dirY = player.positionY - state.positionY;
     let mag = Math.sqrt(dirY * dirY + dirX * dirX);
@@ -79,13 +64,7 @@ export function onPlayerCollide(
     player.positionY = state.positionY + (dirY / mag) * offset;
 }
 
-
-export function updateBarrel(
-    game: Game,
-    state: BarrelState,
-    dt: number
-
-){
+export function updateBarrel(game: Game, state: BarrelState, dt: number) {
     for (let playerId in game.state.players) {
         let player = game.state.players[playerId];
         if (
@@ -101,9 +80,6 @@ export function updateBarrel(
             onPlayerCollide(game, state, player);
         }
     }
-
-
-
 
     for (let bulletId in game.state.bullets) {
         let bullet = game.state.bullets[bulletId];
@@ -122,23 +98,18 @@ export function updateBarrel(
     }
 }
 
-
 export function onBulletCollision(
     game: Game,
     state: BarrelState,
-    bullet: BulletState,
-
-
-){
+    bullet: BulletState
+) {
     delete game.state.bullets[bullet.id];
 
     if (game.isServer) {
         state.health -= 1;
         if (state.health <= 0) {
             delete game.state.barrels[state.id];
-            createExplosion(game, state.positionX,state.positionY)
+            createExplosion(game, state.positionX, state.positionY);
         }
     }
 }
-
-

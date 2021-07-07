@@ -21,7 +21,7 @@ export interface GameState {
     players: { [id: number]: PlayerState };
     bullets: { [id: number]: BulletState };
     barrels: { [id: number]: BarrelState };
-    explosion: {[id: number]: ExplosionState}
+    explosion: { [id: number]: ExplosionState };
 }
 
 export function createGame(isServer: boolean): Game {
@@ -42,13 +42,12 @@ export function createGame(isServer: boolean): Game {
     };
 
     // Procedurally create barrels
-    if(isServer){
+    if (isServer) {
         for (let i = 0; i < 16; i++) {
             let positionX = Utilities.lerp(-1000, 1000, Math.random());
             let positionY = Utilities.lerp(-1000, 1000, Math.random());
             createBarrel(game, positionX, positionY);
         }
-    
     }
     return game;
 }
@@ -73,7 +72,7 @@ export function updateGame(game: Game) {
     for (let barrelId in game.state.barrels) {
         updateBarrel(game, game.state.barrels[barrelId], dt);
     }
-    for(let explosionID in game.state.explosion){
-        updateExplosion(game,game.state.explosion[explosionID],dt)
+    for (let explosionID in game.state.explosion) {
+        updateExplosion(game, game.state.explosion[explosionID], dt);
     }
 }

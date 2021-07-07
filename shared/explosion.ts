@@ -1,17 +1,10 @@
 import { Client } from "../client/Client";
-import { BARREL_RADIUS } from "./barrel";
 import { EntityState } from "./Entity";
 import { Game, generateId } from "./Game";
 import { checkCircleCollision } from "./Physics";
 import { PlayerState, PLAYER_RADIUS } from "./Player";
 
-
-
-
-export const EXPLOSION_RADIUS: number = 42
-
-
-
+export const EXPLOSION_RADIUS: number = 42;
 
 export interface ExplosionState extends EntityState {
     id: number;
@@ -19,37 +12,34 @@ export interface ExplosionState extends EntityState {
     positionY: number;
 }
 
-
-
-
 export function createExplosion(
-    game: Game, 
-    positionX: number, 
+    game: Game,
+    positionX: number,
     positionY: number
-    ): ExplosionState {
-        let state = {
-            id: generateId(game),
-            positionX: positionX,
-            positionY: positionY,
-        };
-        game.state.explosion[state.id] = state;
-        return state;
+): ExplosionState {
+    let state = {
+        id: generateId(game),
+        positionX: positionX,
+        positionY: positionY,
+    };
+
+    game.state.explosion[state.id] = state;
+
+    return state;
 }
-
-
 
 export function renderExplosion(
     client: Client,
     state: ExplosionState,
     ctx: CanvasRenderingContext2D
 ) {
-
-
-    // Draw bullet
+    // Draw explosion
     ctx.save();
     ctx.translate(state.positionX, -state.positionY);
-    let explosionWidth = client.assets.explosion.width * client.assets.scaleFactor;
-    let explosionHeight = client.assets.explosion.height * client.assets.scaleFactor;
+    let explosionWidth =
+        client.assets.explosion.width * client.assets.scaleFactor;
+    let explosionHeight =
+        client.assets.explosion.height * client.assets.scaleFactor;
     ctx.drawImage(
         client.assets.explosion,
         -explosionWidth / 2,
@@ -58,32 +48,18 @@ export function renderExplosion(
         explosionHeight
     );
     ctx.restore();
-
-
 }
-
-
 
 export function onPlayerCollide(
     game: Game,
     state: ExplosionState,
     player: PlayerState
-
-){
-    delete game.state.explosion[state.id]
-    delete game.state.players[player.id]
-
+) {
+    delete game.state.explosion[state.id];
+    delete game.state.players[player.id];
 }
 
-
-
-
-export function updateExplosion(
-    game: Game,
-    state: ExplosionState,
-    dt: number
-
-){
+export function updateExplosion(game: Game, state: ExplosionState, dt: number) {
     for (let playerId in game.state.players) {
         let player = game.state.players[playerId];
         if (
@@ -99,8 +75,4 @@ export function updateExplosion(
             onPlayerCollide(game, state, player);
         }
     }
-
-
 }
-
-
