@@ -70,14 +70,9 @@ export function onPlayerCollide(
     player: PlayerState
 
 ){
-    let dirX = player.positionX - state.positionX;
-    let dirY = player.positionY - state.positionY;
-    let mag = Math.sqrt(dirY * dirY + dirX * dirX);
-    let offset = EXPLOSION_RADIUS + PLAYER_RADIUS;
-    player.positionX = state.positionX + (dirX / mag) * offset;
-    player.positionY = state.positionY + (dirY / mag) * offset;
-    delete game.state.players[player.id]
     delete game.state.explosion[state.id]
+    delete game.state.players[player.id]
+
 }
 
 
