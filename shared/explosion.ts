@@ -55,8 +55,10 @@ export function onPlayerCollide(
     state: ExplosionState,
     player: PlayerState
 ) {
-    delete game.state.explosion[state.id];
-    delete game.state.players[player.id];
+    if(game.isServer){
+        delete game.state.explosion[state.id];
+        delete game.state.players[player.id];
+    }
 }
 
 export function updateExplosion(game: Game, state: ExplosionState, dt: number) {
