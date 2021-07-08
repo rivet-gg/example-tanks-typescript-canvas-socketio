@@ -1,4 +1,5 @@
 import { Client } from "../client/Client";
+import { BotState, BOT_RADIUS, damageBot } from "./Bot";
 import { EntityState } from "./Entity";
 import { Game, generateId } from "./Game";
 import { checkCircleCollision } from "./Physics";
@@ -12,6 +13,7 @@ export interface BulletState extends EntityState {
     velocityX: number;
     velocityY: number;
     bounces: number;
+    time: number;
 }
 
 const BULLET_VELOCITY: number = 1500;
@@ -36,6 +38,7 @@ export function createBullet(
         velocityX: velocityX,
         velocityY: velocityY,
         bounces: 0,
+        time: 3,
     };
     game.state.bullets[state.id] = state;
     return state;
@@ -43,26 +46,31 @@ export function createBullet(
 
 export function updateBullet(game: Game, state: BulletState, dt: number) {
     //state.velocityY -= 5000 * dt;
-
+    let time = state.time - dt;
+    if (time <= 1) {
+        delete game.state.bullets[state.id];
+    } else {
+        state.time = time;
+    }
     // Move bullet
     state.positionX += state.velocityX * dt;
     state.positionY += state.velocityY * dt;
 
     if (state.positionX > game.arenaSize / 2) {
-        state.velocityX = -Math.abs(state.velocityX)
-        didBounce(game,state)
+        state.velocityX = -Math.abs(state.velocityX);
+        didBounce(game, state);
     }
     if (state.positionX < -game.arenaSize / 2) {
-        state.velocityX = Math.abs(state.velocityX)
-        didBounce(game,state)
+        state.velocityX = Math.abs(state.velocityX);
+        didBounce(game, state);
     }
     if (state.positionY > game.arenaSize / 2) {
-        state.velocityY = -Math.abs(state.velocityX)
-        didBounce(game,state)
+        state.velocityY = -Math.abs(state.velocityX);
+        didBounce(game, state);
     }
     if (state.positionY < -game.arenaSize / 2) {
-        state.velocityY = Math.abs(state.velocityX)
-        didBounce(game,state)
+        state.velocityY = Math.abs(state.velocityX);
+        didBounce(game, state);
     }
 
     if (game.isServer) {
@@ -81,6 +89,24 @@ export function updateBullet(game: Game, state: BulletState, dt: number) {
                 )
             ) {
                 onPlayerCollision(game, state, player);
+                return;
+            }
+        }
+
+        for (let botID in game.state.bot) {
+            let bot = game.state.bot[botID];
+            if (
+                bot.id != state.shooterId &&
+                checkCircleCollision(
+                    state.positionX,
+                    state.positionY,
+                    BULLET_RADIUS,
+                    bot.positionX,
+                    bot.positionY,
+                    BOT_RADIUS
+                )
+            ) {
+                onBotCollision(game, state, bot);
                 return;
             }
         }
@@ -119,6 +145,7 @@ function onPlayerCollision(
     player: PlayerState
 ) {
     damagePlayer(game, player, BULLET_DAMAGE, state.shooterId);
+
     delete game.state.bullets[state.id];
 }
 
@@ -128,4 +155,10 @@ function didBounce(game: Game, state: BulletState) {
     if (state.bounces > 1) {
         delete game.state.bullets[state.id];
     }
+}
+
+function onBotCollision(game: Game, state: BulletState, bot: BotState) {
+    damageBot(game, bot, BULLET_DAMAGE, state.shooterId);
+
+    delete game.state.bullets[state.id];
 }
