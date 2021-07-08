@@ -7,7 +7,7 @@ import { Connection } from "./Connection";
 import { Utilities } from "../shared/Utilities";
 import { renderBullet } from "../shared/Bullet";
 import { renderBarrel } from "../shared/barrel";
-import { renderExplosion } from "../shared/explosion";
+import { renderExplosion } from "../shared/Explosion";
 
 const TITLE_TEXT: string = "Tanks!";
 

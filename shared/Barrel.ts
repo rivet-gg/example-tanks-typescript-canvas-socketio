@@ -1,7 +1,7 @@
 import { Client } from "../client/Client";
 import { BulletState, BULLET_RADIUS } from "./Bullet";
 import { EntityState } from "./Entity";
-import { createExplosion } from "./explosion";
+import { createExplosion } from "./Explosion";
 import { Game, generateId } from "./Game";
 import { checkCircleCollision } from "./Physics";
 import { PlayerState, PLAYER_RADIUS } from "./Player";

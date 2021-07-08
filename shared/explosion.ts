@@ -74,7 +74,8 @@ export function updateExplosion(game: Game, state: ExplosionState, dt: number) {
         if(game.isServer){
             delete game.state.explosion[state.id];
         }
-    } else {
+    } else
+     {
         state.time = time
     }
 

@@ -2,7 +2,7 @@ import { Client } from "../client/Client";
 import { BarrelState, createBarrel, updateBarrel } from "./barrel";
 import { BulletState, updateBullet } from "./Bullet";
 import { EntityState } from "./Entity";
-import { ExplosionState, updateExplosion } from "./explosion";
+import { ExplosionState, updateExplosion } from "./Explosion";
 import { PlayerState, updatePlayer } from "./Player";
 import { Utilities } from "./Utilities";
 

@@ -1,12 +1,12 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"label": "Start Development",
-			"type": "npm",
-			"script": "dev",
-			"group": "build",
-			"problemMatcher": []
-		}
-	]
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Start Development",
+            "type": "npm",
+            "script": "dev",
+            "group": "build",
+            "problemMatcher": []
+        }
+    ]
 }
