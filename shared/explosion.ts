@@ -25,7 +25,7 @@ export function createExplosion(
         id: generateId(game),
         positionX: positionX,
         positionY: positionY,
-        time: time
+        time: time,
     };
 
     game.state.explosion[state.id] = state;
@@ -40,11 +40,14 @@ export function renderExplosion(
 ) {
     // Draw explosion
     ctx.save();
+
     ctx.translate(state.positionX, -state.positionY);
+
     let explosionWidth =
         client.assets.explosion.width * client.assets.scaleFactor;
     let explosionHeight =
         client.assets.explosion.height * client.assets.scaleFactor;
+
     ctx.drawImage(
         client.assets.explosion,
         -explosionWidth / 2,
@@ -52,6 +55,7 @@ export function renderExplosion(
         explosionWidth,
         explosionHeight
     );
+
     ctx.restore();
 }
 
@@ -60,11 +64,9 @@ export function onPlayerCollide(
     state: ExplosionState,
     player: PlayerState
 ) {
-    if(game.isServer){
+    if (game.isServer) {
         delete game.state.explosion[state.id];
         delete game.state.players[player.id];
-
-
 
         let positionX = Utilities.lerp(-1000, 1000, Math.random());
         let positionY = Utilities.lerp(-1000, 1000, Math.random());
@@ -72,29 +74,18 @@ export function onPlayerCollide(
     }
 }
 
-
-
-
 export function updateExplosion(game: Game, state: ExplosionState, dt: number) {
-    let time = state.time - dt
-    if(time<=0){
-        if(game.isServer){
+    let time = state.time - dt;
+    if (time <= 0) {
+        if (game.isServer) {
             delete game.state.explosion[state.id];
-
-
             let positionX = Utilities.lerp(-1000, 1000, Math.random());
             let positionY = Utilities.lerp(-1000, 1000, Math.random());
             createBarrel(game, positionX, positionY);
         }
-    } else
-     {
-        state.time = time
+    } else {
+        state.time = time;
     }
-
-
-
-
-
 
     for (let playerId in game.state.players) {
         let player = game.state.players[playerId];
