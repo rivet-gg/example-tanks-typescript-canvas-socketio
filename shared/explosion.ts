@@ -1,8 +1,10 @@
 import { Client } from "../client/Client";
+import { createBarrel } from "./barrel";
 import { EntityState } from "./Entity";
 import { Game, generateId } from "./Game";
 import { checkCircleCollision } from "./Physics";
 import { PlayerState, PLAYER_RADIUS } from "./Player";
+import { Utilities } from "./Utilities";
 
 export const EXPLOSION_RADIUS: number = 42;
 
@@ -60,8 +62,13 @@ export function onPlayerCollide(
 ) {
     if(game.isServer){
         delete game.state.explosion[state.id];
-
         delete game.state.players[player.id];
+
+
+
+        let positionX = Utilities.lerp(-1000, 1000, Math.random());
+        let positionY = Utilities.lerp(-1000, 1000, Math.random());
+        createBarrel(game, positionX, positionY);
     }
 }
 
@@ -73,6 +80,11 @@ export function updateExplosion(game: Game, state: ExplosionState, dt: number) {
     if(time<=0){
         if(game.isServer){
             delete game.state.explosion[state.id];
+
+
+            let positionX = Utilities.lerp(-1000, 1000, Math.random());
+            let positionY = Utilities.lerp(-1000, 1000, Math.random());
+            createBarrel(game, positionX, positionY);
         }
     } else
      {
