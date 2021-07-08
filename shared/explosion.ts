@@ -10,17 +10,20 @@ export interface ExplosionState extends EntityState {
     id: number;
     positionX: number;
     positionY: number;
+    time: number;
 }
 
 export function createExplosion(
     game: Game,
     positionX: number,
-    positionY: number
+    positionY: number,
+    time: number
 ): ExplosionState {
     let state = {
         id: generateId(game),
         positionX: positionX,
         positionY: positionY,
+        time: time
     };
 
     game.state.explosion[state.id] = state;
@@ -57,11 +60,29 @@ export function onPlayerCollide(
 ) {
     if(game.isServer){
         delete game.state.explosion[state.id];
+
         delete game.state.players[player.id];
     }
 }
 
+
+
+
 export function updateExplosion(game: Game, state: ExplosionState, dt: number) {
+    let time = state.time - dt
+    if(time<=0){
+        if(game.isServer){
+            delete game.state.explosion[state.id];
+        }
+    } else {
+        state.time = time
+    }
+
+
+
+
+
+
     for (let playerId in game.state.players) {
         let player = game.state.players[playerId];
         if (
