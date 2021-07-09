@@ -2,10 +2,11 @@ import { Client } from "../client/Client";
 import { BulletState, createBullet } from "./Bullet";
 import { EntityState } from "./Entity";
 import { Game, generateId } from "./Game";
-import { PlayerState } from "./Player";
+import { checkCircleCollision, checkPlayerDistance } from "./Physics";
+import { PlayerState, PLAYER_RADIUS } from "./Player";
 import { Utilities } from "./Utilities";
 
-export const BOT_MOVE_SPEED: number = 300;
+export const BOT_MOVE_SPEED: number = 150;
 export const BOT_RADIUS: number = 38;
 export const BOT_LENGTH: number = 45;
 
@@ -18,6 +19,7 @@ export interface BotState extends EntityState {
     moveY: number;
     health: number;
     score: number;
+    fireCountDown: number;
 }
 
 export function createBot(game: Game): BotState {
@@ -38,6 +40,7 @@ export function createBot(game: Game): BotState {
         moveY: 0,
         health: 1,
         score: 0,
+        fireCountDown: 1,
     };
     game.state.bot[state.id] = state;
     return state;
@@ -47,21 +50,77 @@ function getRandomInt(max: number) {
     return Math.floor(Math.random() * max);
 }
 
-export function updateBot(game: Game, state: BotState, dt: number) {
-    function isEven(dt) {
-        if (dt % 2 == 0) return true;
-        else return false;
+export function shootDelay(game: Game, state: BotState, dt: number) {
+    let fireCountDown = state.fireCountDown - dt;
+    if (fireCountDown <= 0) {
+        //console.log(fire)
+        if (game.isServer) {
+            shoot(game, state);
+            state.fireCountDown = 1;
+        }
+    } else {
+        state.fireCountDown = fireCountDown;
     }
+}
 
-    if (isEven) {
-        shoot(game, state);
+export function updateBot(game: Game, state: BotState, dt: number) {
+    for (let playerId in game.state.players) {
+        let target = playerId[0];
+
+        let targetXPos = game.state.players[playerId].positionX;
+        let targetYPos = game.state.players[playerId].positionY;
+
+        state.aimDir = Math.atan2(
+            -(targetYPos - state.positionY),
+            targetXPos - state.positionX
+        );
+
+        // Calc
+        let distance = checkPlayerDistance(
+            state.positionX,
+            state.positionY,
+            BOT_RADIUS,
+            targetXPos,
+            targetYPos,
+            PLAYER_RADIUS
+        );
+        if (distance > 200) {
+            //step 1 add emotions
+            // let dirX = state.positionX - targetXPos
+            // let dirY = state.positionY - targetYPos
+            let dirX = targetXPos - state.positionX;
+            let dirY = targetYPos - state.positionY;
+
+            state.moveX = dirX / distance;
+
+            state.moveY = dirY / distance;
+
+            if (
+                checkCircleCollision(
+                    state.positionX,
+                    state.positionY,
+                    BOT_RADIUS,
+                    targetXPos,
+                    targetYPos,
+                    PLAYER_RADIUS
+                )
+            ) {
+                console.log("Coll true");
+                let dirX = targetXPos - state.positionX;
+                let dirY = targetYPos - state.positionY;
+                let mag = Math.sqrt(dirY * dirY + dirX * dirX);
+                let offset = BOT_RADIUS + PLAYER_RADIUS;
+                state.positionX = state.positionX + (dirX / mag) * offset;
+                state.positionY = state.positionY + (dirY / mag) * offset;
+            }
+            shootDelay(game, state, dt);
+            state.positionX += state.moveX * BOT_MOVE_SPEED * dt;
+            state.positionY += state.moveY * BOT_MOVE_SPEED * dt;
+        }
+        break;
     }
 
     // Move the player based on the move input
-    state.positionX +=
-        (Math.round(Math.random()) * 2 - 1) * BOT_MOVE_SPEED * dt;
-    state.positionY +=
-        (Math.round(Math.random()) * 2 - 1) * BOT_MOVE_SPEED * dt;
 
     // Restrain to bounds
     state.positionX = Math.max(
@@ -159,21 +218,18 @@ export function renderBot(
 }
 
 export function shoot(game: Game, state: BotState): BulletState {
-    for (let playerId in game.state.players) {
-        let player = game.state.players[playerId];
-        let dirX = -Math.cos(player.aimDir);
-        let dirY = -(-Math.sin(player.aimDir));
+    let dirX = Math.cos(state.aimDir);
+    let dirY = -Math.sin(state.aimDir);
 
-        let bulletX = state.positionX + dirX * BOT_LENGTH;
-        let bulletY = state.positionY + dirY * BOT_LENGTH;
-        return createBullet(
-            game,
-            state.id,
-            bulletX,
-            bulletY,
-            Math.atan2(dirY, dirX)
-        );
-    }
+    let bulletX = state.positionX + dirX * BOT_LENGTH;
+    let bulletY = state.positionY + dirY * BOT_LENGTH;
+    return createBullet(
+        game,
+        state.id,
+        bulletX,
+        bulletY,
+        Math.atan2(dirY, dirX)
+    );
 }
 
 export function damageBot(
@@ -185,6 +241,7 @@ export function damageBot(
     state.health -= amount;
     if (state.health <= 0) {
         onBotKill(game, state, damagerId);
+        createBot(game);
     }
 }
 
