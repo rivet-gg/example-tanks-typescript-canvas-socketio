@@ -4,6 +4,7 @@ import { BotState, createBot, updateBot } from "./Bot";
 import { BulletState, updateBullet } from "./Bullet";
 import { EntityState } from "./Entity";
 import { ExplosionState, updateExplosion } from "./Explosion";
+import { HealthPackState } from "./Healthpack";
 import { PlayerState, updatePlayer } from "./Player";
 import { Utilities } from "./Utilities";
 
@@ -24,6 +25,7 @@ export interface GameState {
     bullets: { [id: number]: BulletState };
     barrels: { [id: number]: BarrelState };
     explosion: { [id: number]: ExplosionState };
+    healthpack: { [id: number]: HealthPackState}
 
 }
 
@@ -42,6 +44,7 @@ export function createGame(isServer: boolean): Game {
             barrels: {},
             explosion: {},
             bot: {},
+            healthpack: {},
         },
     };
 

@@ -5,8 +5,9 @@ import * as tankBarrelRedUrl from "./assets/tankRed_barrel1_outline.png";
 import * as tankBarrelBlueUrl from "./assets/tankBlue_barrel1_outline.png";
 import * as bulletUrl from "./assets/shotRed.png";
 import * as wallUrl from "./assets/barricadeWood.png";
-import * as barrelUrl from "./assets/barrelBlack_top.png"
-import * as barrelExplosion from "./assets/explosion4.png"
+import * as barrelUrl from "./assets/barrelBlack_top.png";
+import * as barrelExplosion from "./assets/explosion4.png";
+import * as healthPack from "./assets/treeGreen_small.png";
 
 export class Assets {
     public scaleFactor = 1;
@@ -19,7 +20,8 @@ export class Assets {
     public bullet = this._load(bulletUrl);
     public wall = this._load(wallUrl);
     public barrel = this._load(barrelUrl);
-    public explosion = this._load(barrelExplosion)
+    public explosion = this._load(barrelExplosion);
+    public healthPack = this._load(healthPack);
 
     private _load(url: string): HTMLImageElement {
         let img = new Image();
