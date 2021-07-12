@@ -2,6 +2,7 @@ import { Client } from "../client/Client";
 import { BarrelState, createBarrel, updateBarrel } from "./Barrel";
 import { BulletState, updateBullet } from "./Bullet";
 import { EntityState } from "./Entity";
+import { ExplosionState, updateExplosion } from "./Explosion";
 import { PlayerState, updatePlayer } from "./Player";
 import { Utilities } from "./Utilities";
 
@@ -20,6 +21,7 @@ export interface GameState {
     players: { [id: number]: PlayerState };
     bullets: { [id: number]: BulletState };
     barrels: { [id: number]: BarrelState };
+    explosions: { [id: number]: ExplosionState };
 }
 
 export function createGame(isServer: boolean): Game {
@@ -35,6 +37,7 @@ export function createGame(isServer: boolean): Game {
             players: {},
             bullets: {},
             barrels: {},
+            explosions: {},
         },
     };
 
@@ -69,5 +72,8 @@ export function updateGame(game: Game) {
     }
     for (let barrelId in game.state.barrels) {
         updateBarrel(game, game.state.barrels[barrelId], dt);
+    }
+    for (let explosionId in game.state.explosions) {
+        updateExplosion(game, game.state.barrels[explosionId], dt);
     }
 }
