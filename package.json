@@ -3,8 +3,10 @@
     "version": "1.0.0",
     "description": "",
     "scripts": {
-        "dev": "npm install && npx concurrently --kill-others \"npm:watch-server\" \"npm:watch-client\"",
-        "watch-server": "nodemon -r dotenv/config --delay 1 --watch server --watch shared --ext ts --exec ts-node server/index.ts",
+        "watch": "npm install && npx concurrently --kill-others \"npm:watch-server\" \"npm:watch-client\"",
+        "run": "npx concurrently --kill-others \"npm:run-server\" \"npm:watch-client\"",
+        "watch-server": "npx kill-port 5000 && nodemon -r dotenv/config --delay 1 --watch server --watch shared --ext ts --exec ts-node server/index.ts",
+        "run-server": "npx kill-port 5000 && ts-node -r dotenv/config server/index.ts",
         "watch-client": "npx kill-port 8080 && npx webpack serve --no-stats",
         "build-client": "npx webpack",
         "build-server": "npx -p typescript tsc --project tsconfig.json"
