@@ -11,6 +11,7 @@ export interface TurretState extends EntityState {
     positionY: number;
     aimDir: number;
     shootTimer: number;
+    aimTimer: number;
 }
 
 export const TURRET_BARREL_LENGTH: number = 28;
@@ -26,13 +27,19 @@ export function createTurret(
         positionY: positionY,
         aimDir: 0,
         shootTimer: 0,
+        aimTimer: 0,
     };
     game.state.turrets[state.id] = state;
     return state;
 }
 
 export function updateTurret(game: Game, state: TurretState, dt: number) {
-    aimAtPlayer(game, state);
+    state.aimTimer += dt;
+    if (state.aimTimer > 5) {
+        state.aimTimer = 0;
+
+        aimAtPlayer(game, state);
+    }
 
     state.shootTimer += dt;
     if (state.shootTimer > 2) {
