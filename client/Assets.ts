@@ -7,6 +7,8 @@ import * as bulletUrl from "./assets/shotRed.png";
 import * as wallUrl from "./assets/barricadeWood.png";
 import * as barrelUrl from "./assets/barrelBlack_top.png";
 import * as explosionUrl from "./assets/explosion4.png";
+import * as turretBodyUrl from "./assets/tankBody_dark_outline.png";
+import * as turretBarrelUrl from "./assets/specialBarrel2_outline.png";
 
 export class Assets {
     public scaleFactor = 1;
@@ -20,6 +22,8 @@ export class Assets {
     public wall = this._load(wallUrl);
     public barrel = this._load(barrelUrl);
     public explosion = this._load(explosionUrl);
+    public turretBody = this._load(turretBodyUrl);
+    public turretBarrel = this._load(turretBarrelUrl);
 
     private _load(url: string): HTMLImageElement {
         let img = new Image();
