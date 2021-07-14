@@ -26,8 +26,8 @@ export function createTurret(
         positionX: positionX,
         positionY: positionY,
         aimDir: 0,
-        shootTimer: 0,
-        aimTimer: 0,
+        shootTimer: Math.random() * 2,
+        aimTimer: Math.random() * 5,
     };
     game.state.turrets[state.id] = state;
     return state;
