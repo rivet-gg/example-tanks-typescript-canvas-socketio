@@ -74,6 +74,6 @@ export function updateGame(game: Game) {
         updateBarrel(game, game.state.barrels[barrelId], dt);
     }
     for (let explosionId in game.state.explosions) {
-        updateExplosion(game, game.state.barrels[explosionId], dt);
+        updateExplosion(game, game.state.explosions[explosionId], dt);
     }
 }
