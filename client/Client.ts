@@ -30,7 +30,7 @@ export interface Client {
 
 export function createClient(): Client {
 	const client = {
-		canvas: document.getElementById("game") as any,
+		canvas: document.getElementById("game") as HTMLCanvasElement,
 
 		input: new Input(),
 		assets: new Assets(),

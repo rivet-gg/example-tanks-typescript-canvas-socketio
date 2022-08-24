@@ -1,4 +1,3 @@
-import fetch from "node-fetch";
 import { createGame, Game, updateGame } from "../shared/Game";
 import { Server as SocketServer, Socket } from "socket.io";
 import { Connection } from "./Connection";
@@ -17,7 +16,7 @@ export class Server {
 	}
 
 	private async _onConnection(socket: Socket) {
-		const connection = new Connection(this, socket);
+		new Connection(this, socket);
 	}
 
 	private _update() {

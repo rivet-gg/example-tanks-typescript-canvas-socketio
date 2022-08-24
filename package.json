@@ -4,10 +4,10 @@
     "description": "",
     "scripts": {
         "start": "concurrently --kill-others \"npm:start:server\" \"npm:watch:client\"",
-        "start:server": "kill-port 5000 && ts-node -r dotenv/config server/index.ts",
+        "start:server": "kill-port -s 5000 && ts-node -r dotenv/config server/index.ts",
         "watch": "npm install && concurrently --kill-others \"npm:watch:server\" \"npm:watch:client\"",
-        "watch:server": "kill-port 5000 && nodemon -r dotenv/config --delay 1 --watch server --watch shared --ext ts --exec ts-node server/index.ts",
-        "watch:client": "kill-port 8080 && webpack serve --no-stats",
+        "watch:server": "kill-port -s 5000 && nodemon -r dotenv/config --delay 1 --watch server --watch shared --ext ts --exec ts-node server/index.ts",
+        "watch:client": "kill-port -s 8080 && webpack serve --no-stats",
         "build:client": "webpack",
         "build:server": "tsc --project tsconfig.json",
         "format": "prettier --write client/ server/ shared/",

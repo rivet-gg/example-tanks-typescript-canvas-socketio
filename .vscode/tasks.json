@@ -11,11 +11,8 @@
         {
             "label": "Run",
             "type": "npm",
-            "script": "run",
-            "group": {
-                "kind": "build"
-                // "isDefault": true
-            },
+            "script": "start",
+            "group": "build",
             "problemMatcher": []
         }
     ]
