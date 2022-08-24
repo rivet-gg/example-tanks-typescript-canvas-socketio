@@ -73,7 +73,7 @@ export function getCurrentPlayer(client: Client): PlayerState | undefined {
 async function connect(client: Client) {
     try {
         console.log("Connecting...");
-        client.connection = new Connection(client, "localhost:8080");
+        client.connection = new Connection(client, "0.0.0.0:5000");
     } catch (err) {
         console.error("Failed to connect:", err);
         return;
