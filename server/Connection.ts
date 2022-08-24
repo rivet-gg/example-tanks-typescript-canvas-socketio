@@ -17,7 +17,7 @@ export class Connection {
         this._socket.once("init", this._onInit.bind(this));
     }
 
-    private async _onInit(playerToken: string, cb: () => void) {
+    private async _onInit(cb: () => void) {
         console.log("Player connecting");
 
         this._socket.on("disconnect", this._onDisconnect.bind(this));

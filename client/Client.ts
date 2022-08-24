@@ -2,7 +2,6 @@ import { Input } from "./Input";
 import { createGame, Game, updateGame } from "../shared/Game";
 import { Assets } from "./Assets";
 import { PlayerState, renderPlayer } from "../shared/Player";
-import * as RIVET from "@rivet-gg/api-game";
 import { Connection } from "./Connection";
 import { Utilities } from "../shared/Utilities";
 import { renderBullet } from "../shared/Bullet";
@@ -21,7 +20,6 @@ export interface Client {
     game: Game;
     currentPlayerId?: number;
 
-    rivet: RIVET.ClientApi;
     connection?: Connection;
 
     screenWidth: number;
@@ -40,11 +38,6 @@ export function createClient(): Client {
         game: createGame(false),
         currentPlayerId: undefined,
 
-        rivet: new RIVET.ClientApi(
-            new RIVET.Configuration({
-                accessToken: process.env.RIVET_CLIENT_TOKEN,
-            })
-        ),
         connection: undefined,
 
         screenWidth: 0,
@@ -79,14 +72,8 @@ export function getCurrentPlayer(client: Client): PlayerState | undefined {
 
 async function connect(client: Client) {
     try {
-        console.log("Finding lobby...");
-        let findRes = await client.rivet.findLobby({
-            gameModes: ["default"],
-        });
-        if (!findRes.lobby) throw new Error("lobby not found");
-
         console.log("Connecting...");
-        client.connection = new Connection(client, findRes.lobby);
+        client.connection = new Connection(client, "localhost:8080");
     } catch (err) {
         console.error("Failed to connect:", err);
         return;
