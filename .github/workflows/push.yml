@@ -1,44 +1,44 @@
 on:
-  push:
-    branches:
-      - main
+    push:
+        branches:
+            - main
 jobs:
-  build:
-    name: build
-    runs-on: ubuntu-20.04
-    steps:
-    - name: Validate env
-      shell: bash
-      run: |
-        if [[ -z "${{ secrets.RIVET_CLOUD_TOKEN }}" ]]; then
-          echo "Missing RIVET_CLOUD_TOKEN secret" >&2
-          exit 1
-        fi
-    - name: Install rivetctl
-      shell: bash
-      run: |
-        VERSION=0.0.6
-        cd /tmp
-        curl -L -o rivetctl.tar.gz https://github.com/rivet-gg/rivetctl/releases/download/${VERSION}/rivetctl_${VERSION}_linux_x86_64.tar.gz
-        sudo tar xvzf rivetctl.tar.gz
-        sudo mv rivetctl /usr/local/bin/
-        rivetctl --help
-    - name: Authenticate rivetctl
-      shell: bash
-      run: |
-        echo "${{ secrets.RIVET_CLOUD_TOKEN }}" | rivetctl auth token
-    - name: Checkout repository
-      uses: actions/checkout@v2
-    - name: Read metadata
-      id: vars
-      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-    - name: Build Docker Image
-      run: docker build --tag my-image .
-    - name: Install NPM modules
-      run: npm install
-    - name: Build Client
-      run: npm run build-client
-    - name: Push Build to Rivet
-      run: rivetctl build push my-image --name "GitHub ${{ steps.vars.outputs.sha_short }}"
-    - name: Push CDN Site to Rivet
-      run: rivetctl site push dist/ --name "GitHub ${{ steps.vars.outputs.sha_short }}"
+    build:
+        name: build
+        runs-on: ubuntu-20.04
+        steps:
+            - name: Validate env
+              shell: bash
+              run: |
+                  if [[ -z "${{ secrets.RIVET_CLOUD_TOKEN }}" ]]; then
+                    echo "Missing RIVET_CLOUD_TOKEN secret" >&2
+                    exit 1
+                  fi
+            - name: Install rivetctl
+              shell: bash
+              run: |
+                  VERSION=0.0.6
+                  cd /tmp
+                  curl -L -o rivetctl.tar.gz https://github.com/rivet-gg/rivetctl/releases/download/${VERSION}/rivetctl_${VERSION}_linux_x86_64.tar.gz
+                  sudo tar xvzf rivetctl.tar.gz
+                  sudo mv rivetctl /usr/local/bin/
+                  rivetctl --help
+            - name: Authenticate rivetctl
+              shell: bash
+              run: |
+                  echo "${{ secrets.RIVET_CLOUD_TOKEN }}" | rivetctl auth token
+            - name: Checkout repository
+              uses: actions/checkout@v2
+            - name: Read metadata
+              id: vars
+              run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+            - name: Build Docker Image
+              run: docker build --tag my-image .
+            - name: Install NPM modules
+              run: npm install
+            - name: Build Client
+              run: npm run build-client
+            - name: Push Build to Rivet
+              run: rivetctl build push my-image --name "GitHub ${{ steps.vars.outputs.sha_short }}"
+            - name: Push CDN Site to Rivet
+              run: rivetctl site push dist/ --name "GitHub ${{ steps.vars.outputs.sha_short }}"

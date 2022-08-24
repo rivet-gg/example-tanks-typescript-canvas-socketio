@@ -1,4 +1,4 @@
 declare module "*.png" {
-    const url: string;
-    export = url;
+	const url: string;
+	export = url;
 }

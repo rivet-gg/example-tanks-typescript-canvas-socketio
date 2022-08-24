@@ -11,23 +11,23 @@ import * as turretBodyUrl from "./assets/tankBody_dark_outline.png";
 import * as turretBarrelUrl from "./assets/specialBarrel2_outline.png";
 
 export class Assets {
-    public scaleFactor = 1;
+	public scaleFactor = 1;
 
-    public tileSand = this._load(tileSandUrl);
-    public tankBodyRed = this._load(tankBodyRedUrl);
-    public tankBodyBlue = this._load(tankBodyBlueUrl);
-    public tankBarrelRed = this._load(tankBarrelRedUrl);
-    public tankBarrelBlue = this._load(tankBarrelBlueUrl);
-    public bullet = this._load(bulletUrl);
-    public wall = this._load(wallUrl);
-    public barrel = this._load(barrelUrl);
-    public explosion = this._load(explosionUrl);
-    public turretBody = this._load(turretBodyUrl);
-    public turretBarrel = this._load(turretBarrelUrl);
+	public tileSand = this._load(tileSandUrl);
+	public tankBodyRed = this._load(tankBodyRedUrl);
+	public tankBodyBlue = this._load(tankBodyBlueUrl);
+	public tankBarrelRed = this._load(tankBarrelRedUrl);
+	public tankBarrelBlue = this._load(tankBarrelBlueUrl);
+	public bullet = this._load(bulletUrl);
+	public wall = this._load(wallUrl);
+	public barrel = this._load(barrelUrl);
+	public explosion = this._load(explosionUrl);
+	public turretBody = this._load(turretBodyUrl);
+	public turretBarrel = this._load(turretBarrelUrl);
 
-    private _load(url: string): HTMLImageElement {
-        let img = new Image();
-        img.src = url;
-        return img;
-    }
+	private _load(url: string): HTMLImageElement {
+		let img = new Image();
+		img.src = url;
+		return img;
+	}
 }

@@ -9,7 +9,8 @@
         "watch:server": "kill-port 5000 && nodemon -r dotenv/config --delay 1 --watch server --watch shared --ext ts --exec ts-node server/index.ts",
         "watch:client": "kill-port 8080 && webpack serve --no-stats",
         "build:client": "webpack",
-        "build:server": "tsc --project tsconfig.json"
+        "build:server": "tsc --project tsconfig.json",
+        "format": "prettier --write client/ server/ shared/"
     },
     "author": "",
     "license": "MIT",
@@ -26,6 +27,7 @@
         "html-webpack-plugin": "^5.3.1",
         "kill-port": "^1.6.1",
         "nodemon": "^2.0.7",
+        "prettier": "^2.7.1",
         "socket.io-client": "^4.0.1",
         "ts-loader": "^9.2.3",
         "ts-node": "^9.1.1",
