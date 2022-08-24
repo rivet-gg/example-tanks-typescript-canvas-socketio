@@ -3,22 +3,20 @@
     "version": "1.0.0",
     "description": "",
     "scripts": {
-        "watch": "npm install && npx concurrently --kill-others \"npm:watch-server\" \"npm:watch-client\"",
-        "run": "npx concurrently --kill-others \"npm:run-server\" \"npm:watch-client\"",
-        "watch-server": "npx kill-port 5000 && nodemon -r dotenv/config --delay 1 --watch server --watch shared --ext ts --exec ts-node server/index.ts",
-        "run-server": "npx kill-port 5000 && ts-node -r dotenv/config server/index.ts",
-        "watch-client": "npx kill-port 8080 && npx webpack serve --no-stats",
-        "build-client": "npx webpack",
-        "build-server": "npx -p typescript tsc --project tsconfig.json"
+        "start": "concurrently --kill-others \"npm:start:server\" \"npm:watch:client\"",
+        "start:server": "kill-port 5000 && ts-node -r dotenv/config server/index.ts",
+        "watch": "npm install && concurrently --kill-others \"npm:watch:server\" \"npm:watch:client\"",
+        "watch:server": "kill-port 5000 && nodemon -r dotenv/config --delay 1 --watch server --watch shared --ext ts --exec ts-node server/index.ts",
+        "watch:client": "kill-port 8080 && webpack serve --no-stats",
+        "build:client": "webpack",
+        "build:server": "tsc --project tsconfig.json"
     },
     "author": "",
     "license": "MIT",
     "dependencies": {
         "@rivet-gg/api-game": "^0.0.4",
-        "kill-port": "^1.6.1",
         "node-fetch": "^2.6.1",
-        "socket.io": "^4.0.1",
-        "socket.io-client": "^4.0.1"
+        "socket.io": "^4.0.1"
     },
     "devDependencies": {
         "@types/react": "^17.0.4",
@@ -27,7 +25,9 @@
         "dotenv": "^5.0.1",
         "dotenv-webpack": "^7.0.3",
         "html-webpack-plugin": "^5.3.1",
+        "kill-port": "^1.6.1",
         "nodemon": "^2.0.7",
+        "socket.io-client": "^4.0.1",
         "ts-loader": "^9.2.3",
         "ts-node": "^9.1.1",
         "typescript": "^4.3.2",
