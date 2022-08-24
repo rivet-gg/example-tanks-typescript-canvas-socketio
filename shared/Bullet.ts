@@ -14,9 +14,9 @@ export interface BulletState extends EntityState {
 	bounces: number;
 }
 
-const BULLET_VELOCITY: number = 1500;
-export const BULLET_RADIUS: number = 42;
-const BULLET_DAMAGE: number = 0.22;
+const BULLET_VELOCITY = 1500;
+export const BULLET_RADIUS = 42;
+const BULLET_DAMAGE = 0.22;
 
 export function createBullet(
 	game: Game,
@@ -25,10 +25,10 @@ export function createBullet(
 	positionY: number,
 	dir: number
 ): BulletState {
-	let velocityX = Math.cos(dir) * BULLET_VELOCITY;
-	let velocityY = Math.sin(dir) * BULLET_VELOCITY;
+	const velocityX = Math.cos(dir) * BULLET_VELOCITY;
+	const velocityY = Math.sin(dir) * BULLET_VELOCITY;
 
-	let state = {
+	const state = {
 		id: generateId(game),
 		shooterId: shooterId,
 		positionX: positionX,
@@ -65,8 +65,8 @@ export function updateBullet(game: Game, state: BulletState, dt: number) {
 
 	if (game.isServer) {
 		// Check if collided with another player
-		for (let playerId in game.state.players) {
-			let player = game.state.players[playerId];
+		for (const playerId in game.state.players) {
+			const player = game.state.players[playerId];
 			if (
 				player.id != state.shooterId &&
 				checkCircleCollision(
@@ -97,8 +97,8 @@ export function renderBullet(
 	// Draw bullet
 	ctx.save();
 	ctx.rotate(Math.atan2(-state.velocityY, state.velocityX) + Math.PI / 2);
-	let bulletWidth = client.assets.bullet.width * client.assets.scaleFactor;
-	let bulletHeight = client.assets.bullet.height * client.assets.scaleFactor;
+	const bulletWidth = client.assets.bullet.width * client.assets.scaleFactor;
+	const bulletHeight = client.assets.bullet.height * client.assets.scaleFactor;
 	ctx.drawImage(
 		client.assets.bullet,
 		-bulletWidth / 2,

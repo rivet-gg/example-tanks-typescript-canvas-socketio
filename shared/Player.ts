@@ -16,13 +16,13 @@ export interface PlayerState extends EntityState {
 	shootTimer: number;
 }
 
-export const PLAYER_MOVE_SPEED: number = 500;
-export const PLAYER_RADIUS: number = 38;
-export const BARREL_LENGTH: number = 45;
-export const RELOAD_TIME: number = 0.5;
+export const PLAYER_MOVE_SPEED = 500;
+export const PLAYER_RADIUS = 38;
+export const BARREL_LENGTH = 45;
+export const RELOAD_TIME = 0.5;
 
 export function createPlayer(game: Game): PlayerState {
-	let state = {
+	const state = {
 		id: generateId(game),
 		positionX: Utilities.lerp(
 			-game.arenaSize / 2,
@@ -83,8 +83,8 @@ export function renderPlayer(
 	// Draw body
 	ctx.save();
 	ctx.rotate(Math.atan2(-state.moveY, state.moveX) + Math.PI / 2);
-	let bodyWidth = client.assets.tankBodyRed.width * client.assets.scaleFactor;
-	let bodyHeight =
+	const bodyWidth = client.assets.tankBodyRed.width * client.assets.scaleFactor;
+	const bodyHeight =
 		client.assets.tankBodyRed.height * client.assets.scaleFactor;
 	ctx.drawImage(
 		client.assets.tankBodyRed,
@@ -98,9 +98,9 @@ export function renderPlayer(
 	// Draw barrel
 	ctx.save();
 	ctx.rotate(state.aimDir + Math.PI / 2);
-	let barrelWidth =
+	const barrelWidth =
 		client.assets.tankBarrelRed.width * client.assets.scaleFactor;
-	let barrelHeight =
+	const barrelHeight =
 		client.assets.tankBarrelRed.height * client.assets.scaleFactor;
 	ctx.drawImage(
 		client.assets.tankBarrelRed,
@@ -112,10 +112,10 @@ export function renderPlayer(
 	ctx.restore();
 
 	// Draw health
-	let healthY = -PLAYER_RADIUS - 5;
-	let healthWidth = 80;
-	let healthHeight = 10;
-	let healthPadding = 4;
+	const healthY = -PLAYER_RADIUS - 5;
+	const healthWidth = 80;
+	const healthHeight = 10;
+	const healthPadding = 4;
 	ctx.save();
 	ctx.fillStyle = "#333";
 	ctx.fillRect(
@@ -134,7 +134,7 @@ export function renderPlayer(
 	ctx.restore();
 
 	// Draw score
-	let scoreY = healthY - 25;
+	const scoreY = healthY - 25;
 	ctx.save();
 	ctx.fillStyle = "white";
 	ctx.strokeStyle = "#333";
@@ -151,11 +151,11 @@ export function shoot(game: Game, state: PlayerState) {
 	if (state.shootTimer < 0) {
 		state.shootTimer = RELOAD_TIME;
 
-		let dirX = Math.cos(state.aimDir);
-		let dirY = -Math.sin(state.aimDir);
+		const dirX = Math.cos(state.aimDir);
+		const dirY = -Math.sin(state.aimDir);
 
-		let bulletX = state.positionX + dirX * BARREL_LENGTH;
-		let bulletY = state.positionY + dirY * BARREL_LENGTH;
+		const bulletX = state.positionX + dirX * BARREL_LENGTH;
+		const bulletY = state.positionY + dirY * BARREL_LENGTH;
 		createBullet(game, state.id, bulletX, bulletY, Math.atan2(dirY, dirX));
 	}
 }
@@ -175,7 +175,7 @@ export function damagePlayer(
 function onPlayerKill(game: Game, state: PlayerState, killerId?: number) {
 	// Give points to the killer
 	if (killerId) {
-		let killer = game.state.players[killerId];
+		const killer = game.state.players[killerId];
 		if (killer) {
 			killer.score += 1;
 		}

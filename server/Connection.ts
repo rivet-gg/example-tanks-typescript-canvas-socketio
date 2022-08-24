@@ -35,25 +35,25 @@ export class Connection {
 
 	private _onJoin(cb: (playerId: number) => void) {
 		if (!this.currentPlayer) {
-			let player = createPlayer(this._server.game);
+			const player = createPlayer(this._server.game);
 			this.currentPlayerId = player.id;
 			cb(player.id);
 		}
 	}
 
 	private _onShoot() {
-		let player = this.currentPlayer;
+		const player = this.currentPlayer;
 		if (player) shoot(this._server.game, player);
 	}
 
 	private _onInput(moveX: number, moveY: number, aimDir: number) {
-		let currentPlayer = this.currentPlayer;
+		const currentPlayer = this.currentPlayer;
 		if (!currentPlayer) return;
 
 		// Normalize move direction in order to ensure players move at a consistent speed
 		// in every direction
 		if (moveX != 0 || moveY != 0) {
-			let moveMagnitude = Math.sqrt(moveX * moveX + moveY * moveY);
+			const moveMagnitude = Math.sqrt(moveX * moveX + moveY * moveY);
 			moveX /= moveMagnitude;
 			moveY /= moveMagnitude;
 		}

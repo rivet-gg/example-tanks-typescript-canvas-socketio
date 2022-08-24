@@ -13,14 +13,14 @@ export interface BarrelState extends EntityState {
 	health: number;
 }
 
-const BARREL_RADIUS: number = 24;
+const BARREL_RADIUS = 24;
 
 export function createBarrel(
 	game: Game,
 	positionX: number,
 	positionY: number
 ): BarrelState {
-	let state = {
+	const state = {
 		id: generateId(game),
 		positionX: positionX,
 		positionY: positionY,
@@ -31,8 +31,8 @@ export function createBarrel(
 }
 
 export function updateBarrel(game: Game, state: BarrelState, dt: number) {
-	for (let playerId in game.state.players) {
-		let player = game.state.players[playerId];
+	for (const playerId in game.state.players) {
+		const player = game.state.players[playerId];
 		if (
 			checkCircleCollision(
 				state.positionX,
@@ -47,8 +47,8 @@ export function updateBarrel(game: Game, state: BarrelState, dt: number) {
 		}
 	}
 
-	for (let bulletId in game.state.bullets) {
-		let bullet = game.state.bullets[bulletId];
+	for (const bulletId in game.state.bullets) {
+		const bullet = game.state.bullets[bulletId];
 		if (
 			checkCircleCollision(
 				state.positionX,
@@ -73,8 +73,8 @@ export function renderBarrel(
 
 	ctx.translate(state.positionX, -state.positionY);
 
-	let barrelWidth = client.assets.barrel.width * client.assets.scaleFactor;
-	let barrelHeight = client.assets.barrel.height * client.assets.scaleFactor;
+	const barrelWidth = client.assets.barrel.width * client.assets.scaleFactor;
+	const barrelHeight = client.assets.barrel.height * client.assets.scaleFactor;
 	ctx.drawImage(
 		client.assets.barrel,
 		-barrelWidth / 2,
@@ -87,10 +87,10 @@ export function renderBarrel(
 }
 
 function onPlayerCollide(game: Game, state: BarrelState, player: PlayerState) {
-	let dirX = player.positionX - state.positionX;
-	let dirY = player.positionY - state.positionY;
-	let mag = Math.sqrt(dirY * dirY + dirX * dirX);
-	let offset = BARREL_RADIUS + PLAYER_RADIUS;
+	const dirX = player.positionX - state.positionX;
+	const dirY = player.positionY - state.positionY;
+	const mag = Math.sqrt(dirY * dirY + dirX * dirX);
+	const offset = BARREL_RADIUS + PLAYER_RADIUS;
 	player.positionX = state.positionX + (dirX / mag) * offset;
 	player.positionY = state.positionY + (dirY / mag) * offset;
 }

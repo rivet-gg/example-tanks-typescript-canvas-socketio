@@ -13,14 +13,14 @@ export class Input {
 	}
 
 	private _keyDown(event: KeyboardEvent) {
-		let key = event.key.toLowerCase();
+		const key = event.key.toLowerCase();
 
 		// Prevent handling duplicate key events
 		if (this._activeKeys.has(key)) return;
 
 		this._activeKeys.add(key);
 
-		let callbacks = this._keyDownEvents.get(key);
+		const callbacks = this._keyDownEvents.get(key);
 		if (callbacks !== undefined) {
 			callbacks.forEach((cb) => cb(event));
 		}
@@ -29,7 +29,7 @@ export class Input {
 	}
 
 	private _keyUp(event: KeyboardEvent) {
-		let key = event.key.toLowerCase();
+		const key = event.key.toLowerCase();
 
 		this._activeKeys.delete(key);
 

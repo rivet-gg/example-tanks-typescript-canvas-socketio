@@ -9,7 +9,7 @@ import { renderBarrel } from "../shared/Barrel";
 import { renderExplosion } from "../shared/Explosion";
 import { renderTurret } from "../shared/Turret";
 
-const TITLE_TEXT: string = "Tanks!";
+const TITLE_TEXT = "Tanks!";
 
 export interface Client {
 	canvas: HTMLCanvasElement;
@@ -29,7 +29,7 @@ export interface Client {
 }
 
 export function createClient(): Client {
-	let client = {
+	const client = {
 		canvas: document.getElementById("game") as any,
 
 		input: new Input(),
@@ -97,7 +97,7 @@ function shoot(client: Client) {
 
 function update(client: Client) {
 	// Update the current player's state
-	let currentPlayer = getCurrentPlayer(client);
+	const currentPlayer = getCurrentPlayer(client);
 	if (currentPlayer) {
 		// Determine move direction
 		let moveX = 0;
@@ -108,7 +108,7 @@ function update(client: Client) {
 		if (client.input.isKeyDown("w")) moveY += 1;
 
 		// Determine rotation
-		let aimDir = Math.atan2(
+		const aimDir = Math.atan2(
 			client.input.mousePosition.y - client.canvas.clientHeight / 2,
 			client.input.mousePosition.x - client.canvas.clientWidth / 2
 		);
@@ -120,7 +120,7 @@ function update(client: Client) {
 	updateGame(client.game);
 
 	// Render the game
-	let ctx = client.canvas.getContext("2d")!;
+	const ctx = client.canvas.getContext("2d")!;
 	render(client, ctx);
 
 	// Ask the browser to call client.update function again on the next frame.
@@ -128,10 +128,10 @@ function update(client: Client) {
 }
 
 function render(client: Client, ctx: CanvasRenderingContext2D) {
-	let currentPlayer = getCurrentPlayer(client);
+	const currentPlayer = getCurrentPlayer(client);
 
 	// Update world screen width and height
-	let scale = window.innerHeight / client.game.viewportHeight;
+	const scale = window.innerHeight / client.game.viewportHeight;
 	client.screenWidth = window.innerWidth / scale;
 	client.screenHeight = window.innerHeight / scale;
 
@@ -174,18 +174,18 @@ function render(client: Client, ctx: CanvasRenderingContext2D) {
 
 function renderBackground(client: Client, ctx: CanvasRenderingContext2D) {
 	if (client.assets.tileSand.complete) {
-		let tileSize =
+		const tileSize =
 			client.assets.tileSand.height * client.assets.scaleFactor;
-		let tileXMin = Math.floor(
+		const tileXMin = Math.floor(
 			(client.cameraOffsetX - client.screenWidth / 2) / tileSize
 		);
-		let tileXMax = Math.ceil(
+		const tileXMax = Math.ceil(
 			(client.cameraOffsetX + client.screenWidth / 2) / tileSize
 		);
-		let tileYMin = Math.floor(
+		const tileYMin = Math.floor(
 			(client.cameraOffsetY - client.game.viewportHeight / 2) / tileSize
 		);
-		let tileYMax = Math.ceil(
+		const tileYMax = Math.ceil(
 			(client.cameraOffsetY + client.game.viewportHeight / 2) / tileSize
 		);
 		for (let x = tileXMin; x <= tileXMax; x++) {
@@ -204,12 +204,12 @@ function renderBackground(client: Client, ctx: CanvasRenderingContext2D) {
 
 function renderWall(client: Client, ctx: CanvasRenderingContext2D) {
 	if (client.assets.wall.complete) {
-		let wallSize = client.assets.wall.width * client.assets.scaleFactor;
-		let paddedArenaSize = client.game.arenaSize + wallSize; // Account for border image width along the outline
-		let idealSpacing = 60;
-		let wallCount = Math.floor(paddedArenaSize / idealSpacing);
+		const wallSize = client.assets.wall.width * client.assets.scaleFactor;
+		const paddedArenaSize = client.game.arenaSize + wallSize; // Account for border image width along the outline
+		const idealSpacing = 60;
+		const wallCount = Math.floor(paddedArenaSize / idealSpacing);
 		for (let i = 0; i < wallCount; i++) {
-			let progress =
+			const progress =
 				-paddedArenaSize / 2 + (i / (wallCount - 1)) * paddedArenaSize;
 
 			// Top
@@ -262,7 +262,7 @@ function renderMenu(client: Client, ctx: CanvasRenderingContext2D) {
 		ctx.strokeStyle = "#333";
 		ctx.lineWidth = 30;
 		ctx.font = Utilities.font(175, 900);
-		let titleY = -client.screenHeight / 2 + 150;
+		const titleY = -client.screenHeight / 2 + 150;
 		ctx.strokeText(TITLE_TEXT, 0, titleY);
 		ctx.fillText(TITLE_TEXT, 0, titleY);
 		ctx.restore();
@@ -270,7 +270,7 @@ function renderMenu(client: Client, ctx: CanvasRenderingContext2D) {
 		// Render instructions
 		ctx.save();
 		ctx.fillStyle = "white";
-		let instructions = [
+		const instructions = [
 			"Controls:",
 			"Aim: Mouse",
 			"Move: WASD",
@@ -313,19 +313,19 @@ function renderFullscreenMessage(
 }
 
 function renderGame(client: Client, ctx: CanvasRenderingContext2D) {
-	for (let playerId in client.game.state.players) {
+	for (const playerId in client.game.state.players) {
 		renderPlayer(client, client.game.state.players[playerId], ctx);
 	}
-	for (let bulletId in client.game.state.bullets) {
+	for (const bulletId in client.game.state.bullets) {
 		renderBullet(client, client.game.state.bullets[bulletId], ctx);
 	}
-	for (let barrelId in client.game.state.barrels) {
+	for (const barrelId in client.game.state.barrels) {
 		renderBarrel(client, client.game.state.barrels[barrelId], ctx);
 	}
-	for (let explosionId in client.game.state.explosions) {
+	for (const explosionId in client.game.state.explosions) {
 		renderExplosion(client, client.game.state.explosions[explosionId], ctx);
 	}
-	for (let turretId in client.game.state.turrets) {
+	for (const turretId in client.game.state.turrets) {
 		renderTurret(client, client.game.state.turrets[turretId], ctx);
 	}
 }

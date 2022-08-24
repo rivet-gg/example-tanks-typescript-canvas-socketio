@@ -5,8 +5,8 @@ import { GameState } from "../shared/Game";
 export class Connection {
 	public socket: Socket;
 
-	public isDisconnected: boolean = false;
-	public isConnected: boolean = false;
+	public isDisconnected = false;
+	public isConnected = false;
 
 	public constructor(private _client: Client, public host: string) {
 		this.socket = io(host, {

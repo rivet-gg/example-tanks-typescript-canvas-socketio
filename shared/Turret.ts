@@ -14,14 +14,14 @@ export interface TurretState extends EntityState {
 	aimTimer: number;
 }
 
-export const TURRET_BARREL_LENGTH: number = 28;
+export const TURRET_BARREL_LENGTH = 28;
 
 export function createTurret(
 	game: Game,
 	positionX: number,
 	positionY: number
 ): TurretState {
-	let state = {
+	const state = {
 		id: generateId(game),
 		positionX: positionX,
 		positionY: positionY,
@@ -60,8 +60,8 @@ export function renderTurret(
 
 	// Draw body
 	ctx.save();
-	let bodyWidth = client.assets.turretBody.width * client.assets.scaleFactor;
-	let bodyHeight =
+	const bodyWidth = client.assets.turretBody.width * client.assets.scaleFactor;
+	const bodyHeight =
 		client.assets.turretBody.height * client.assets.scaleFactor;
 	ctx.drawImage(
 		client.assets.turretBody,
@@ -75,9 +75,9 @@ export function renderTurret(
 	// Draw barrel
 	ctx.save();
 	ctx.rotate(state.aimDir - Math.PI / 2);
-	let barrelWidth =
+	const barrelWidth =
 		client.assets.turretBarrel.width * client.assets.scaleFactor;
-	let barrelHeight =
+	const barrelHeight =
 		client.assets.turretBarrel.height * client.assets.scaleFactor;
 	ctx.drawImage(
 		client.assets.turretBarrel,
@@ -92,21 +92,21 @@ export function renderTurret(
 }
 
 export function shoot(game: Game, state: TurretState) {
-	let dirX = Math.cos(state.aimDir);
-	let dirY = Math.sin(state.aimDir);
+	const dirX = Math.cos(state.aimDir);
+	const dirY = Math.sin(state.aimDir);
 
-	let bulletX = state.positionX + dirX * TURRET_BARREL_LENGTH;
-	let bulletY = state.positionY + dirY * TURRET_BARREL_LENGTH;
+	const bulletX = state.positionX + dirX * TURRET_BARREL_LENGTH;
+	const bulletY = state.positionY + dirY * TURRET_BARREL_LENGTH;
 	createBullet(game, state.id, bulletX, bulletY, Math.atan2(-dirY, dirX));
 }
 
 function aimAtPlayer(game: Game, state: TurretState) {
 	// Find nearest player to turret
 	let nearestPlayer: PlayerState = null;
-	let nearestPlayerDist = Number.POSITIVE_INFINITY;
-	for (let playerId in game.state.players) {
-		let player = game.state.players[playerId];
-		let dist = Math.sqrt(
+	const nearestPlayerDist = Number.POSITIVE_INFINITY;
+	for (const playerId in game.state.players) {
+		const player = game.state.players[playerId];
+		const dist = Math.sqrt(
 			Math.pow(player.positionY - state.positionY, 2) +
 				Math.pow(player.positionX - state.positionX, 2)
 		);
@@ -115,8 +115,8 @@ function aimAtPlayer(game: Game, state: TurretState) {
 
 	// Update the aim dir
 	if (nearestPlayer != null) {
-		let dirX = nearestPlayer.positionX - state.positionX;
-		let dirY = nearestPlayer.positionY - state.positionY;
+		const dirX = nearestPlayer.positionX - state.positionX;
+		const dirY = nearestPlayer.positionY - state.positionY;
 		state.aimDir = Math.atan2(-dirY, dirX);
 	}
 }

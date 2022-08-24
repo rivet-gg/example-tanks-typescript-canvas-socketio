@@ -12,14 +12,14 @@ export interface ExplosionState extends EntityState {
 	destroyTimer: number;
 }
 
-const EXPLOSION_RADIUS: number = 24;
+const EXPLOSION_RADIUS = 24;
 
 export function createExplosion(
 	game: Game,
 	positionX: number,
 	positionY: number
 ): ExplosionState {
-	let state = {
+	const state = {
 		id: generateId(game),
 		positionX: positionX,
 		positionY: positionY,
@@ -45,9 +45,9 @@ export function renderExplosion(
 
 	ctx.translate(state.positionX, -state.positionY);
 
-	let explosionWidth =
+	const explosionWidth =
 		client.assets.explosion.width * client.assets.scaleFactor;
-	let explosionHeight =
+	const explosionHeight =
 		client.assets.explosion.height * client.assets.scaleFactor;
 	ctx.drawImage(
 		client.assets.explosion,

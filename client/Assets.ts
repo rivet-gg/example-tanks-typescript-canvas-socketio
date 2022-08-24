@@ -26,7 +26,7 @@ export class Assets {
 	public turretBarrel = this._load(turretBarrelUrl);
 
 	private _load(url: string): HTMLImageElement {
-		let img = new Image();
+		const img = new Image();
 		img.src = url;
 		return img;
 	}

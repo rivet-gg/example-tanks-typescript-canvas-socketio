@@ -17,7 +17,7 @@ export class Server {
 	}
 
 	private async _onConnection(socket: Socket) {
-		let connection = new Connection(this, socket);
+		const connection = new Connection(this, socket);
 	}
 
 	private _update() {

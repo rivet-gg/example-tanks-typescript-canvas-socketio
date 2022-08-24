@@ -11,7 +11,8 @@
         "build:client": "webpack",
         "build:server": "tsc --project tsconfig.json",
         "format": "prettier --write client/ server/ shared/",
-        "lint": "eslint ."
+        "lint": "eslint client/ server/ shared/",
+        "lint:fix": "eslint --fix client/ server/ shared/"
     },
     "author": "",
     "license": "MIT",
