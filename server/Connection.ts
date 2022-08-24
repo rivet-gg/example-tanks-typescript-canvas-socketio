@@ -20,19 +20,6 @@ export class Connection {
     private async _onInit(playerToken: string, cb: () => void) {
         console.log("Player connecting");
 
-        this._socket.on("disconnect", () => {
-            this._server.rivet.playerDisconnected({ playerToken });
-        });
-
-        try {
-            await this._server.rivet.playerConnected({ playerToken });
-        } catch (err) {
-            console.error("failed to authenticate player", err);
-            this._socket.disconnect();
-        }
-
-        console.log("Player registered");
-
         this._socket.on("disconnect", this._onDisconnect.bind(this));
         this._socket.on("join", this._onJoin.bind(this));
         this._socket.on("shoot", this._onShoot.bind(this));
