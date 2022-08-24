@@ -1,7 +1,5 @@
-import { Client } from "../client/Client";
 import { BarrelState, createBarrel, updateBarrel } from "./Barrel";
 import { BulletState, updateBullet } from "./Bullet";
-import { EntityState } from "./Entity";
 import { ExplosionState, updateExplosion } from "./Explosion";
 import { PlayerState, updatePlayer } from "./Player";
 import { createTurret, TurretState, updateTurret } from "./Turret";

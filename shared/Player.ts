@@ -2,7 +2,7 @@ import { Client } from "../client/Client";
 import { Game, generateId } from "./Game";
 import { Utilities } from "./Utilities";
 import { EntityState } from "./Entity";
-import { BulletState, createBullet } from "./Bullet";
+import { createBullet } from "./Bullet";
 
 export interface PlayerState extends EntityState {
 	id: number;

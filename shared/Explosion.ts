@@ -1,9 +1,6 @@
 import { Client } from "../client/Client";
-import { BulletState, BULLET_RADIUS } from "./Bullet";
 import { EntityState } from "./Entity";
 import { Game, generateId } from "./Game";
-import { checkCircleCollision } from "./Physics";
-import { PlayerState, PLAYER_RADIUS } from "./Player";
 
 export interface ExplosionState extends EntityState {
 	id: number;
@@ -11,8 +8,6 @@ export interface ExplosionState extends EntityState {
 	positionY: number;
 	destroyTimer: number;
 }
-
-const EXPLOSION_RADIUS = 24;
 
 export function createExplosion(
 	game: Game,

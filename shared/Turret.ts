@@ -1,6 +1,5 @@
 import { Client } from "../client/Client";
 import { Game, generateId } from "./Game";
-import { Utilities } from "./Utilities";
 import { EntityState } from "./Entity";
 import { createBullet } from "./Bullet";
 import { PlayerState } from "./Player";

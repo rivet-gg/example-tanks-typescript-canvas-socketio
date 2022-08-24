@@ -120,7 +120,11 @@ function update(client: Client) {
 	updateGame(client.game);
 
 	// Render the game
-	const ctx = client.canvas.getContext("2d")!;
+	const ctx = client.canvas.getContext("2d");
+	if (!ctx) {
+		alert("Failed to get context");
+		return;
+	}
 	render(client, ctx);
 
 	// Ask the browser to call client.update function again on the next frame.

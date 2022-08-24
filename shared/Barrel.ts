@@ -30,7 +30,7 @@ export function createBarrel(
 	return state;
 }
 
-export function updateBarrel(game: Game, state: BarrelState, dt: number) {
+export function updateBarrel(game: Game, state: BarrelState, _dt: number) {
 	for (const playerId in game.state.players) {
 		const player = game.state.players[playerId];
 		if (
