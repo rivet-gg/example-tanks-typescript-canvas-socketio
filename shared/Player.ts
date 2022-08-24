@@ -19,6 +19,7 @@ export interface PlayerState extends EntityState {
 export const PLAYER_MOVE_SPEED: number = 500;
 export const PLAYER_RADIUS: number = 38;
 export const BARREL_LENGTH: number = 45;
+export const RELOAD_TIME: number = 0.5;
 
 export function createPlayer(game: Game): PlayerState {
 	let state = {
@@ -148,7 +149,7 @@ export function renderPlayer(
 
 export function shoot(game: Game, state: PlayerState) {
 	if (state.shootTimer < 0) {
-		state.shootTimer = 2;
+		state.shootTimer = RELOAD_TIME;
 
 		let dirX = Math.cos(state.aimDir);
 		let dirY = -Math.sin(state.aimDir);
