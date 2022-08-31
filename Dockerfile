@@ -1,5 +1,5 @@
 # === Build ===
-FROM node:15-alpine as build
+FROM node:16-alpine as build
 WORKDIR /app
 
 COPY package.json package-lock.json ./
