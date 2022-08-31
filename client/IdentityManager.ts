@@ -11,7 +11,8 @@ import {
 import { RepeatingRequest } from "@rivet-gg/common";
 
 export class IdentityManager {
-	private service: IdentityService;
+	private nsService: IdentityService;
+	private service!: IdentityService;
 
 	private identityUpdateHandler?: (identity: IdentityProfile) => void;
 	private chatMessageHandler?: (
@@ -31,22 +32,22 @@ export class IdentityManager {
 	private identityStream?: RepeatingRequest<GetIdentitySelfProfileCommandOutput>;
 	private eventStream?: RepeatingRequest<WatchEventsCommandOutput>;
 
-	constructor() {
-		this.service = new IdentityService({
+	constructor(private serviceToken: string) {
+		this.nsService = new IdentityService({
             endpoint: "https://identity.api.rivet.gg/v1",
+            token: serviceToken,
         });
 	}
 
-	withService(service: IdentityService) {
-		this.service = service;
-	}
-
 	async build(token?: string): Promise<void> {
-		let { identityToken } = await this.service.setupIdentity({
+		let { identityToken } = await this.nsService.setupIdentity({
 			existingIdentityToken: token ?? this.fetchToken(),
 		});
 
-		this.service.config.token = identityToken!;
+		this.service = new IdentityService({
+            endpoint: "https://identity.api.rivet.gg/v1",
+            token: identityToken,
+        })
 		this.saveToken(identityToken!);
 
 		this.startStreams();
@@ -74,58 +75,61 @@ export class IdentityManager {
 		this.errorHandler = handler;
 	}
 
-	private startStreams() {
-		this.identityStream = new RepeatingRequest(
-			async (abortSignal, watchIndex) => {
-				return await this.service.getIdentitySelfProfile(
-					{ watchIndex },
-					{ abortSignal }
-				);
-			}
-		);
+	private async startStreams() {
+        let res = await this.service.getIdentitySelfProfile({});
+        if (this.identityUpdateHandler) this.identityUpdateHandler(res.identity);
 
-		this.identityStream.onMessage((res) => {
-			if (this.identityUpdateHandler !== undefined)
-				this.identityUpdateHandler(res.identity!);
-		});
-		this.identityStream.onError(this.handleError);
+		// this.identityStream = new RepeatingRequest(
+		// 	async (abortSignal, watchIndex) => {
+		// 		return await this.service.getIdentitySelfProfile(
+		// 			{ watchIndex },
+		// 			{ abortSignal }
+		// 		);
+		// 	}
+		// );
 
-		this.eventStream = new RepeatingRequest(
-			async (abortSignal, watchIndex) => {
-				return await this.service.watchEvents(
-					{ watchIndex },
-					{ abortSignal }
-				);
-			}
-		);
+		// this.identityStream.onMessage((res) => {
+		// 	if (this.identityUpdateHandler !== undefined)
+		// 		this.identityUpdateHandler(res.identity!);
+		// });
+		// this.identityStream.onError(this.handleError.bind(this));
 
-		this.eventStream.onMessage((res) => {
-			for (let event of res.events!) {
-				if (event.kind!.chatMessage) {
-					if (this.chatMessageHandler !== undefined) {
-						this.chatMessageHandler(
-							event.kind!.chatMessage.thread!,
-							event.notification
-						);
-					}
-				} else if (event.kind!.matchmakerLobbyJoin) {
-					if (this.matchmakerLobbyJoinHandler !== undefined) {
-						this.matchmakerLobbyJoinHandler(
-							event.kind!.matchmakerLobbyJoin.lobby!,
-							event.notification
-						);
-					}
-				} else if (event.kind!.partyUpdate) {
-					if (this.partyUpdateHandler !== undefined) {
-						this.partyUpdateHandler(
-							event.kind!.partyUpdate.party!,
-							event.notification
-						);
-					}
-				}
-			}
-		});
-		this.eventStream.onError(this.handleError);
+		// this.eventStream = new RepeatingRequest(
+		// 	async (abortSignal, watchIndex) => {
+		// 		return await this.service.watchEvents(
+		// 			{ watchIndex },
+		// 			{ abortSignal }
+		// 		);
+		// 	}
+		// );
+
+		// this.eventStream.onMessage((res) => {
+		// 	for (let event of res.events!) {
+		// 		if (event.kind!.chatMessage) {
+		// 			if (this.chatMessageHandler !== undefined) {
+		// 				this.chatMessageHandler(
+		// 					event.kind!.chatMessage.thread!,
+		// 					event.notification
+		// 				);
+		// 			}
+		// 		} else if (event.kind!.matchmakerLobbyJoin) {
+		// 			if (this.matchmakerLobbyJoinHandler !== undefined) {
+		// 				this.matchmakerLobbyJoinHandler(
+		// 					event.kind!.matchmakerLobbyJoin.lobby!,
+		// 					event.notification
+		// 				);
+		// 			}
+		// 		} else if (event.kind!.partyUpdate) {
+		// 			if (this.partyUpdateHandler !== undefined) {
+		// 				this.partyUpdateHandler(
+		// 					event.kind!.partyUpdate.party!,
+		// 					event.notification
+		// 				);
+		// 			}
+		// 		}
+		// 	}
+		// });
+		// this.eventStream.onError(this.handleError.bind(this));
 	}
 
 	private fetchToken() {
@@ -147,8 +151,8 @@ export class IdentityManager {
 }
 
 export interface SetupIdentityConfig {
+    serviceToken: string;
 	token?: string;
-	service?: IdentityService;
 
 	onIdentityUpdate?: IdentityManager["identityUpdateHandler"];
 	onChatMessage?: IdentityManager["chatMessageHandler"];
@@ -158,9 +162,7 @@ export interface SetupIdentityConfig {
 }
 
 export async function setupIdentity(opts: SetupIdentityConfig) {
-	let manager = new IdentityManager();
-
-	if (opts.service !== undefined) manager.withService(opts.service);
+	let manager = new IdentityManager(opts.serviceToken);
 
 	if (opts.onIdentityUpdate !== undefined)
 		manager.onIdentityUpdate(opts.onIdentityUpdate);
