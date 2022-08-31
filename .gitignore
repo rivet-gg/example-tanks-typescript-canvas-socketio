@@ -2,3 +2,8 @@
 .parcel-cache/
 dist/
 node_modules/
+
+# HACK: Fix "Commit hash required" error
+package-lock.json
+yarn.lock
+
