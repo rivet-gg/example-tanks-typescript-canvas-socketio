@@ -30,13 +30,10 @@ module.exports = {
     },
     devtool: "inline-source-map",
     devServer: {
-        contentBase: path.join(__dirname, "dist"),
+        static: path.join(__dirname, "dist"),
         host: "0.0.0.0",
         port: 8080,
-        sockHost: "0.0.0.0",
-        sockPort: 8080,
         hot: true,
-        overlay: true,
         open: true,
     },
     watchOptions: {
