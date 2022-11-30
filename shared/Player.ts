@@ -83,7 +83,8 @@ export function renderPlayer(
 	// Draw body
 	ctx.save();
 	ctx.rotate(Math.atan2(-state.moveY, state.moveX) + Math.PI / 2);
-	const bodyWidth = client.assets.tankBodyRed.width * client.assets.scaleFactor;
+	const bodyWidth =
+		client.assets.tankBodyRed.width * client.assets.scaleFactor;
 	const bodyHeight =
 		client.assets.tankBodyRed.height * client.assets.scaleFactor;
 	ctx.drawImage(
@@ -156,7 +157,14 @@ export function shoot(game: Game, state: PlayerState) {
 
 		const bulletX = state.positionX + dirX * BARREL_LENGTH;
 		const bulletY = state.positionY + dirY * BARREL_LENGTH;
-		createBullet(game, BULLET_DAMAGE_PLAYER, state.id, bulletX, bulletY, Math.atan2(dirY, dirX));
+		createBullet(
+			game,
+			BULLET_DAMAGE_PLAYER,
+			state.id,
+			bulletX,
+			bulletY,
+			Math.atan2(dirY, dirX)
+		);
 	}
 }
 

@@ -9,7 +9,12 @@ export class Connection {
 	public isConnected = false;
 	public isInitiated = false;
 
-	public constructor(private _client: Client, public secure: boolean, public host: string, query: { [key: string]: string }) {
+	public constructor(
+		private _client: Client,
+		public secure: boolean,
+		public host: string,
+		query: { [key: string]: string }
+	) {
 		this.socket = io(host, {
 			transports: ["websocket"],
 			reconnection: false,

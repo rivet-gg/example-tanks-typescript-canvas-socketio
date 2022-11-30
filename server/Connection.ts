@@ -1,19 +1,19 @@
-import { Server } from "./Server";
 import { Socket } from "socket.io";
 import { createPlayer, PlayerState, shoot } from "../shared/Player";
+import { Game } from "../shared/Game";
 
 export class Connection {
 	public currentPlayerId?: number;
 
 	public get currentPlayer(): PlayerState | undefined {
 		if (this.currentPlayerId) {
-			return this._server.game.state.players[this.currentPlayerId];
+			return this._game.state.players[this.currentPlayerId];
 		} else {
 			return undefined;
 		}
 	}
 
-	public constructor(private _server: Server, private _socket: Socket) {
+	public constructor(private _game: Game, private _socket: Socket) {
 		this._socket.on("disconnect", this._onDisconnect.bind(this));
 		this._socket.on("join", this._onJoin.bind(this));
 		this._socket.on("shoot", this._onShoot.bind(this));
@@ -24,12 +24,12 @@ export class Connection {
 
 	private _onDisconnect() {
 		if (this.currentPlayerId)
-			delete this._server.game.state.players[this.currentPlayerId];
+			delete this._game.state.players[this.currentPlayerId];
 	}
 
 	private _onJoin(cb: (playerId: number) => void) {
 		if (!this.currentPlayer) {
-			const player = createPlayer(this._server.game);
+			const player = createPlayer(this._game);
 			this.currentPlayerId = player.id;
 			cb(player.id);
 		}
@@ -37,7 +37,7 @@ export class Connection {
 
 	private _onShoot() {
 		const player = this.currentPlayer;
-		if (player) shoot(this._server.game, player);
+		if (player) shoot(this._game, player);
 	}
 
 	private _onInput(moveX: number, moveY: number, aimDir: number) {

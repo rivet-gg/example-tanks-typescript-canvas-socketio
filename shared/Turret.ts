@@ -59,7 +59,8 @@ export function renderTurret(
 
 	// Draw body
 	ctx.save();
-	const bodyWidth = client.assets.turretBody.width * client.assets.scaleFactor;
+	const bodyWidth =
+		client.assets.turretBody.width * client.assets.scaleFactor;
 	const bodyHeight =
 		client.assets.turretBody.height * client.assets.scaleFactor;
 	ctx.drawImage(
@@ -96,7 +97,14 @@ export function shoot(game: Game, state: TurretState) {
 
 	const bulletX = state.positionX + dirX * TURRET_BARREL_LENGTH;
 	const bulletY = state.positionY + dirY * TURRET_BARREL_LENGTH;
-	createBullet(game, state.id, BULLET_DAMAGE_TURRET, bulletX, bulletY, Math.atan2(-dirY, dirX));
+	createBullet(
+		game,
+		state.id,
+		BULLET_DAMAGE_TURRET,
+		bulletX,
+		bulletY,
+		Math.atan2(-dirY, dirX)
+	);
 }
 
 function aimAtPlayer(game: Game, state: TurretState) {

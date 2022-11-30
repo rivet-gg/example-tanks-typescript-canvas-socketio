@@ -102,7 +102,8 @@ export function renderBullet(
 	ctx.save();
 	ctx.rotate(Math.atan2(-state.velocityY, state.velocityX) + Math.PI / 2);
 	const bulletWidth = client.assets.bullet.width * client.assets.scaleFactor;
-	const bulletHeight = client.assets.bullet.height * client.assets.scaleFactor;
+	const bulletHeight =
+		client.assets.bullet.height * client.assets.scaleFactor;
 	ctx.drawImage(
 		client.assets.bullet,
 		-bulletWidth / 2,

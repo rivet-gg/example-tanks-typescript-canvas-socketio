@@ -74,7 +74,8 @@ export function renderBarrel(
 	ctx.translate(state.positionX, -state.positionY);
 
 	const barrelWidth = client.assets.barrel.width * client.assets.scaleFactor;
-	const barrelHeight = client.assets.barrel.height * client.assets.scaleFactor;
+	const barrelHeight =
+		client.assets.barrel.height * client.assets.scaleFactor;
 	ctx.drawImage(
 		client.assets.barrel,
 		-barrelWidth / 2,
