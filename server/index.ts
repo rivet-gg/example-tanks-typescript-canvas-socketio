@@ -1,4 +1,4 @@
-import { Server as SocketServer } from "socket.io";
+import { Server as SocketServer, Socket } from "socket.io";
 import { createGame, updateGame } from "../shared/Game";
 import { Connection } from "./Connection";
 
@@ -14,9 +14,11 @@ const socketServer = new SocketServer(port, {
 		origin: "*",
 	},
 });
-socketServer.on("connection", (socket) => {
+socketServer.on("connection", setupConnection);
+
+async function setupConnection(socket: Socket) {
 	new Connection(game, socket);
-});
+}
 
 // Update game & broadcast state
 setInterval(() => {
