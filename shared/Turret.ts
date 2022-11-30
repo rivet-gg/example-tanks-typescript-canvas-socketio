@@ -1,7 +1,7 @@
 import { Client } from "../client/Client";
 import { Game, generateId } from "./Game";
 import { EntityState } from "./Entity";
-import { createBullet } from "./Bullet";
+import { createBullet, BULLET_DAMAGE_TURRET } from "./Bullet";
 import { PlayerState } from "./Player";
 
 export interface TurretState extends EntityState {
@@ -96,7 +96,7 @@ export function shoot(game: Game, state: TurretState) {
 
 	const bulletX = state.positionX + dirX * TURRET_BARREL_LENGTH;
 	const bulletY = state.positionY + dirY * TURRET_BARREL_LENGTH;
-	createBullet(game, state.id, bulletX, bulletY, Math.atan2(-dirY, dirX));
+	createBullet(game, state.id, BULLET_DAMAGE_TURRET, bulletX, bulletY, Math.atan2(-dirY, dirX));
 }
 
 function aimAtPlayer(game: Game, state: TurretState) {

@@ -7,6 +7,7 @@ import { damagePlayer, PlayerState, PLAYER_RADIUS } from "./Player";
 export interface BulletState extends EntityState {
 	id: number;
 	shooterId: number;
+	damage: number;
 	positionX: number;
 	positionY: number;
 	velocityX: number;
@@ -16,11 +17,13 @@ export interface BulletState extends EntityState {
 
 const BULLET_VELOCITY = 1500;
 export const BULLET_RADIUS = 42;
-const BULLET_DAMAGE = 0.22;
+export const BULLET_DAMAGE_PLAYER = 0.22;
+export const BULLET_DAMAGE_TURRET = 0.05;
 
 export function createBullet(
 	game: Game,
 	shooterId: number,
+	damage: number,
 	positionX: number,
 	positionY: number,
 	dir: number
@@ -31,6 +34,7 @@ export function createBullet(
 	const state = {
 		id: generateId(game),
 		shooterId: shooterId,
+		damage: damage,
 		positionX: positionX,
 		positionY: positionY,
 		velocityX: velocityX,
@@ -116,7 +120,7 @@ function onPlayerCollision(
 	state: BulletState,
 	player: PlayerState
 ) {
-	damagePlayer(game, player, BULLET_DAMAGE, state.shooterId);
+	damagePlayer(game, player, state.damage, state.shooterId);
 	delete game.state.bullets[state.id];
 }
 

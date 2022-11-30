@@ -2,7 +2,7 @@ import { Client } from "../client/Client";
 import { Game, generateId } from "./Game";
 import { Utilities } from "./Utilities";
 import { EntityState } from "./Entity";
-import { createBullet } from "./Bullet";
+import { createBullet, BULLET_DAMAGE_PLAYER } from "./Bullet";
 
 export interface PlayerState extends EntityState {
 	id: number;
@@ -156,7 +156,7 @@ export function shoot(game: Game, state: PlayerState) {
 
 		const bulletX = state.positionX + dirX * BARREL_LENGTH;
 		const bulletY = state.positionY + dirY * BARREL_LENGTH;
-		createBullet(game, state.id, bulletX, bulletY, Math.atan2(dirY, dirX));
+		createBullet(game, BULLET_DAMAGE_PLAYER, state.id, bulletX, bulletY, Math.atan2(dirY, dirX));
 	}
 }
 
