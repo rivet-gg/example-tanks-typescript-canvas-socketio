@@ -2,14 +2,14 @@
 FROM node:16-alpine as build
 WORKDIR /app
 
-COPY package.json package-lock.json ./
-RUN npm install
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
 COPY . .
 RUN npm run build:server
 
 # === Run ===
-FROM node:15-alpine
+FROM node:16-alpine
 WORKDIR /app
 COPY --from=build /app /app
 
