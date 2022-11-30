@@ -7,6 +7,7 @@ export class Connection {
 
 	public isDisconnected = false;
 	public isConnected = false;
+	public isInitiated = false;
 
 	public constructor(private _client: Client, public secure: boolean, public host: string, query: { [key: string]: string }) {
 		this.socket = io(host, {
@@ -15,6 +16,7 @@ export class Connection {
 			secure,
 			query,
 		});
+		this.socket.once("init", this._onInit.bind(this));
 		this.socket.on("connect", this._onConnect.bind(this));
 		this.socket.on("disconnect", this._onDisconnect.bind(this));
 		this.socket.on("update", this._onUpdate.bind(this));
@@ -22,14 +24,11 @@ export class Connection {
 
 	private _onConnect() {
 		this.isDisconnected = false;
-
-		console.log("Initiating...");
-		this.socket.emit("init", this._onInit.bind(this));
+		this.isConnected = true;
 	}
 
 	private _onInit() {
-		console.log("Initiated.");
-		this.isConnected = true;
+		this.isInitiated = true;
 	}
 
 	private _onUpdate(state: GameState) {
@@ -39,5 +38,6 @@ export class Connection {
 	private _onDisconnect() {
 		this.isDisconnected = true;
 		this.isConnected = false;
+		this.isInitiated = false;
 	}
 }

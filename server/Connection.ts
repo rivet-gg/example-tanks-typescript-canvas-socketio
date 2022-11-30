@@ -14,18 +14,12 @@ export class Connection {
 	}
 
 	public constructor(private _server: Server, private _socket: Socket) {
-		this._socket.once("init", this._onInit.bind(this));
-	}
-
-	private async _onInit(cb: () => void) {
-		console.log("Player connecting");
-
 		this._socket.on("disconnect", this._onDisconnect.bind(this));
 		this._socket.on("join", this._onJoin.bind(this));
 		this._socket.on("shoot", this._onShoot.bind(this));
 		this._socket.on("input", this._onInput.bind(this));
 
-		cb();
+		this._socket.emit("init");
 	}
 
 	private _onDisconnect() {

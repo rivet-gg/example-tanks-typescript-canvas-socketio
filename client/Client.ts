@@ -261,6 +261,8 @@ function renderMenu(client: Client, ctx: CanvasRenderingContext2D) {
 		renderFullscreenMessage(client, ctx, "Disconnected.");
 	} else if (!client.connection?.isConnected) {
 		renderFullscreenMessage(client, ctx, "Connecting...");
+	} else if (!client.connection?.isInitiated) {
+		renderFullscreenMessage(client, ctx, "Initiating...");
 	} else if (!getCurrentPlayer(client)) {
 		renderFullscreenMessage(client, ctx, "Press Enter to join");
 
