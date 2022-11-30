@@ -28,7 +28,7 @@ export interface Client {
 	cameraOffsetY: number;
 }
 
-export function createClient(): Client {
+export async function createClient(): Promise<Client> {
 	const client = {
 		canvas: document.getElementById("game") as HTMLCanvasElement,
 
@@ -57,7 +57,11 @@ export function createClient(): Client {
 	// Setup game
 	update(client);
 
-	connect(client);
+	try {
+		connect(client);
+	} catch (err) {
+		console.error("Failed to connect:", err);
+	}
 
 	return client;
 }
