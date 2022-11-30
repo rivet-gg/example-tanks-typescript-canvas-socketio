@@ -8,11 +8,12 @@ export class Connection {
 	public isDisconnected = false;
 	public isConnected = false;
 
-	public constructor(private _client: Client, public host: string) {
+	public constructor(private _client: Client, public host: string, query: { [key: string]: string }) {
 		this.socket = io(host, {
 			transports: ["websocket"],
 			reconnectionDelay: 250,
 			reconnectionDelayMax: 1000,
+			query,
 		});
 		this.socket.on("connect", this._onConnect.bind(this));
 		this.socket.on("disconnect", this._onDisconnect.bind(this));
