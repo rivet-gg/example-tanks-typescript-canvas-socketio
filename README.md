@@ -44,7 +44,7 @@ Then run the following command to setup your project:
 rivet init \
     --recommended \
     --dockerfile-path ./Dockerfile \
-    --cdn-build-command "yarn run build:client" \
+    --cdn-build-command "yarn install && yarn run build:client" \
     --cdn-path ./dist/ \
     --dev-hostname 127.0.01 \
     --dev-port default:http:5000 \
