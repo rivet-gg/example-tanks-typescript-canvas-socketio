@@ -3,7 +3,6 @@
 dist/
 node_modules/
 
-# HACK: Fix "Commit hash required" error
-package-lock.json
-yarn.lock
-
+### Rivet ###
+.rivet/
+.env
