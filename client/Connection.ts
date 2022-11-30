@@ -11,8 +11,7 @@ export class Connection {
 	public constructor(private _client: Client, public host: string, query: { [key: string]: string }) {
 		this.socket = io(host, {
 			transports: ["websocket"],
-			reconnectionDelay: 250,
-			reconnectionDelayMax: 1000,
+			reconnection: false,
 			query,
 		});
 		this.socket.on("connect", this._onConnect.bind(this));
