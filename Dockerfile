@@ -6,7 +6,7 @@ COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
 COPY . .
-RUN npm run build:server
+RUN yarn run build:server
 
 # === Run ===
 FROM node:16-alpine
