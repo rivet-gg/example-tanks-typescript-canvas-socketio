@@ -4,11 +4,11 @@ WORKDIR /app
 
 RUN apk add --no-cache git
 
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+COPY package.json package-lock.json ./
+RUN npm install --production
 
 COPY . .
-RUN yarn run build:server
+RUN npm run build:server
 
 # === Run ===
 FROM node:16-alpine

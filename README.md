@@ -9,105 +9,100 @@ This is the starter branch for walking through the integration of a game in to R
 ## Prerequisites
 
 - [Rivet Developer Account](https://rivet.gg/developer)
+    - Ensure you've already created a Rivet game for this tutorial
 - [Rivet CLI](https://github.com/rivet-gg/cli)
 - GitHub repository
 - Node.js 16+
-- Optional: Yarn
 
 ## Guide
 
 The following guide will walk you through integraing and deploying a game with Rivet.
 
-## Step 1: Run local
+### Step 1: Run locally without Rivet
 
-```
-yarn install
-yarn start
-```
-
-or
+Run the following commands in your terminal to run the project locally:
 
 ```
 npm install
 npm start
 ```
 
-This should open your browser to http://localhost:8080. Verify the game works correctly.
+This will open your browser to http://localhost:8080. Verify the game works.
 
-## Step 2: Initialize project
+### Step 2: Initialize project
 
-Create a cloud token from *API > Create Cloud Token* and copy this to your clipboard.
-
-Then run the following command to setup your project:
+Run the following command to setup your project:
 
 ```bash
-rivet init \
-    --recommended \
-    --dockerfile-path ./Dockerfile \
-    --cdn-build-command "yarn install && yarn run build:client" \
-    --cdn-path ./dist/ \
-    --dev-hostname 127.0.01 \
-    --dev-port default:http:5000 \
-    --dev-env
+rivet init
+    --server-port 5000 \
+    --dockerfile-path Dockerfile \
+    --cdn-build-command "npm install && npm run build:client" \
+    --cdn-build-output ./dist/
 ```
 
-This does three main thing:
-- Create `rivet.version.toml` to configure your deployed game
-- Create `.github/workflows/rivet-publish.yaml` to enable Git integration with Rivet
-- Create a dev token added to your `.env` to tell RIvet to mock API endpoints in development
+> **What did this do?**
+>
+> - Linked your project to Rivet
+> - Created `rivet.version.toml` file that configures how to run your game.
+> - Added a development token to your `.env` that lets you develop with Rivet on your local machine
 
-If you're curious about more options, run `rivet init` without any flags to go
-through the interactive setup process.
+You can also run `rivet init` wihtout any flags to go through the interactive setup process.
 
+### Step 3: Install `@rivet-gg/api`
 
-## Step 3: Install `@rivet-gg/matchmaker`
+Run the following to install the library to interact with Rivet:
 
-```bash
-yarn add @rivet-gg/matchmaker
+```
+npm install --save @rivet-gg/api
 ```
 
-or
-
-```bash
-npm install --save @rivet-gg/matchmaker
-```
-
-## Step 4: Integrate Rivet Matchmaker to the client
+### Step 4: Integrate Rivet Matchmaker in to the client
 
 Add the following to the top of `client/Client.ts`:
 
+**client/Client.ts**
+
 ````typescript
-import { MatchmakerService } from "@rivet-gg/matchmaker";
-export const MATCHMAKER = new MatchmakerService({});
+import { Rivet } from "@rivet-gg/api";
+export const RIVET = new Rivet({});
 ````
 
 Find the `connect` function in `client/Client.ts` and replace it with the following:
 
+**client/Client.ts**
+
 ```typescript
 async function connect(client: Client) {
-	let res = await MATCHMAKER.findLobby({ gameModes: ["default"] });
-	let port = res.lobby!.ports!["default"];
-	client.connection = new Connection(client, port.isTls!, port.host!, {
-		token: res.lobby!.player!.token!,
+	let res = await RIVET.matchmaker.lobbies.find({ gameModes: ["default"] });
+	let port = res.ports["default"];
+	client.connection = new Connection(client, port.isTls, port.host, {
+		token: res.player.token,
 	});
 }
 ```
 
-Run `yarn start` again and validate the game still connects. Open the network inspector and reload to see a `POST` request to `https://matchmaker.api.rivet.gg/v1/lobbies/find`.
+Run `npm start` again and validate the game still connects.
 
-## Step 5: Integrate Rivet Matchmaker in to your server
+Open the network inspector and reload to see a `POST` request to `https://matchmaker.api.rivet.gg/v1/lobbies/find`.
+
+### Step 5: Integrate Rivet Matchmaker in to the server
 
 Add the following to the top of `server/index.ts`:
 
+**server/index.ts**
+
 ```typescript
-import { MatchmakerService } from "@rivet-gg/matchmaker";
-export const MATCHMAKER = new MatchmakerService({});
+import { RivetClient } from "@rivet-gg/matchmaker";
+export const RIVET = new RivetClient({});
 
 // Tell the matchmaker that this lobby is ready to start accepting players
-MATCHMAKER.lobbyReady({});
+RIVET.lobbyReady({});
 ```
 
 Find the `setupConnection` function in `server/index.ts` and replace it with the following:
+
+**server/index.ts**
 
 ```typescript
 async function setupConnection(socket: Socket) {
@@ -115,28 +110,28 @@ async function setupConnection(socket: Socket) {
     let playerToken = socket.handshake.query.token as string;
 
     // Validate the player token with the matchmaker
-    await MATCHMAKER.playerConnected({ playerToken });
+    await RIVET.matchmaker.players.connected({ playerToken });
 
     // Remove the player when disconnected
-    socket.on("disconnect", () => MATCHMAKER.playerDisconnected({ playerToken }));
+    socket.on("disconnect", () => RIVET.matchmaker.players.disconnected({ playerToken }));
 
     new Connection(game, socket);
 }
 ```
 
-## Step 5: Configure GitHub Actions secret
+### Step 6: Deploy to Rivet
 
-Create another cloud token from *API > Create Cloud Token* and copy this to your clipboard.
+Deploy your game to Rivet with:
 
-Open your GitHub repository and navigate to *Settings > Secrets > Actions*. Click *New repository secret*. Name it `RIVET_CLOUD_TOKEN`. Paste your cloud token as the secret. Click *Add secret*.
+```bash
+rivet deploy --namespace prod
+```
 
-## Step 6: Push to GitHub
+The CLI will print a link ending in *rivet.game*. Share the link with a friend to play your game on Rivet!
 
-Push your repository to GitHub.
-
-You'll see your project build and deploy to Rivet under the *Actions* tab on GitHub.
-
-Navigate to your game in the Rivet dashboard and validate that the new versino is live.
-
-If your build succeeds, your game will be live on rivet.game for anyone to play. For example, if your game's name ID is `my-game` and your branch is `main`, then you can visit `my-game--main.rivet.game` to play your game. (Note the double `--`.)
-
+> **What did this do?**
+>
+> - Build & upload your site for [Rivet CDN](https://docs.rivet.gg/cdn/introduction)
+> - Build & upload your Docker image for [Rivet Serverless Lobbies](https://docs.rivet.gg/serverless-lobbies/introduction)
+> - Create a version on Rivet
+> - Deploy your version to the production namespace
