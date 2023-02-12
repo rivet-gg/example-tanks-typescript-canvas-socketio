@@ -11,7 +11,6 @@ This is the starter branch for walking through the integration of a game in to R
 - [Rivet Developer Account](https://rivet.gg/developer)
     - Ensure you've already created a Rivet game for this tutorial
 - [Rivet CLI](https://github.com/rivet-gg/cli)
-- GitHub repository
 - Node.js 16+
 
 ## Guide
