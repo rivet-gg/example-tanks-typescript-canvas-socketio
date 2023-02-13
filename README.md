@@ -34,8 +34,10 @@ Run the following command to setup your project:
 
 ```bash
 rivet init
-    --server-port 5000 \
-    --dockerfile-path Dockerfile \
+    --matchmaker \
+    -matchmaker-port 5000 \
+    --matchmaker-dockerfile Dockerfile \
+    --cdn \
     --cdn-build-command "npm install && npm run build:client" \
     --cdn-build-output ./dist/
 ```
