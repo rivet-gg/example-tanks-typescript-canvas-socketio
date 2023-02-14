@@ -52,7 +52,7 @@
 [cdn]
 	# Command to run before uploading the site to Rivet. This can be used to
 	# build any JavaScript bundles or generate assets.
-	build_command = "npm install && npm run build:client"
+	build_command = "npm install && npm run build:client:prod"
 
 	# The folder to upload to Rivet.
 	#

@@ -9,6 +9,7 @@
         "watch:server": "kill-port -s 3000 && nodemon -r dotenv/config --delay 1 --watch server --watch shared --ext ts --exec ts-node server/index.ts",
         "watch:client": "kill-port -s 8080 && webpack serve --no-stats",
         "build:client": "webpack",
+        "build:client:prod": "webpack --env production",
         "build:server": "tsc --project tsconfig.json",
         "format": "prettier --write client/ server/ shared/",
         "lint": "eslint client/ server/ shared/",
