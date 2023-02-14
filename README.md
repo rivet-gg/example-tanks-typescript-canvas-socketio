@@ -35,12 +35,13 @@ This will open your browser to http://localhost:8080. Verify the game works.
 Run the following command to setup your project:
 
 ```bash
-rivet init
+rivet init \
+    --recommend \
     --matchmaker \
-    -matchmaker-port 3000 \
+    --matchmaker-port 3000 \
     --matchmaker-dockerfile Dockerfile \
     --cdn \
-    --cdn-build-command "npm install && npm run build:client" \
+    --cdn-build-command "npm install && npm run build:client:prod" \
     --cdn-build-output ./dist/
 ```
 
@@ -52,6 +53,8 @@ rivet init
 
 You can also run `rivet init` wihtout any flags to go through the interactive setup process.
 
+[🛟 *Checkpoint* 🛟](https://github.com/rivet-gg/example-tanks-typescript-canvas-socketio/tree/checkpoint/01-init)
+
 ### Step 3: Install `@rivet-gg/api`
 
 Run the following to install the library to interact with Rivet:
@@ -60,6 +63,8 @@ Run the following to install the library to interact with Rivet:
 npm install --save @rivet-gg/api
 ```
 
+[🛟 *Checkpoint* 🛟](https://github.com/rivet-gg/example-tanks-typescript-canvas-socketio/tree/checkpoint/01-init)
+
 ### Step 4: Integrate Rivet Matchmaker in to the client
 
 Add the following to the top of `client/Client.ts`:
@@ -67,8 +72,8 @@ Add the following to the top of `client/Client.ts`:
 **client/Client.ts**
 
 ````typescript
-import { Rivet } from "@rivet-gg/api";
-export const RIVET = new Rivet({});
+import { RivetClient } from "@rivet-gg/api";
+export const RIVET = new RivetClient({ token: process.env.RIVET_TOKEN });
 ````
 
 Find the `connect` function in `client/Client.ts` and replace it with the following:
@@ -89,6 +94,8 @@ Run `npm start` again and validate the game still connects.
 
 Open the network inspector and reload to see a `POST` request to `https://matchmaker.api.rivet.gg/v1/lobbies/find`.
 
+[🛟 *Checkpoint* 🛟](https://github.com/rivet-gg/example-tanks-typescript-canvas-socketio/tree/checkpoint/02-integrate-client)
+
 ### Step 5: Integrate Rivet Matchmaker in to the server
 
 Add the following to the top of `server/index.ts`:
@@ -96,11 +103,11 @@ Add the following to the top of `server/index.ts`:
 **server/index.ts**
 
 ```typescript
-import { RivetClient } from "@rivet-gg/matchmaker";
-export const RIVET = new RivetClient({});
+import { RivetClient } from "@rivet-gg/api";
+export const RIVET = new RivetClient({ token: process.env.RIVET_TOKEN });
 
-// Tell the matchmaker that this lobby is ready to start accepting players
-RIVET.lobbyReady({});
+// Notify Rivet that this lobby is ready to accept players
+RIVET.matchmaker.lobbies.ready();
 ```
 
 Find the `setupConnection` function in `server/index.ts` and replace it with the following:
