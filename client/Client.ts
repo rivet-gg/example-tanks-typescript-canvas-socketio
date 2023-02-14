@@ -68,7 +68,7 @@ export async function createClient(): Promise<Client> {
 
 async function connect(client: Client) {
 	console.log("Connecting...");
-	client.connection = new Connection(client, false, "0.0.0.0:5000", {});
+	client.connection = new Connection(client, false, "0.0.0.0:3000", {});
 }
 
 

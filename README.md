@@ -1,7 +1,9 @@
 # Rivet Example Project
 
 **Language:** TypeScript
+
 **Rendering:** HTML5 Canvas
+
 **Networking:** Socket.io
 
 This is the starter branch for walking through the integration of a game in to Rivet.
@@ -35,7 +37,7 @@ Run the following command to setup your project:
 ```bash
 rivet init
     --matchmaker \
-    -matchmaker-port 5000 \
+    -matchmaker-port 3000 \
     --matchmaker-dockerfile Dockerfile \
     --cdn \
     --cdn-build-command "npm install && npm run build:client" \
