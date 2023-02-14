@@ -2,6 +2,10 @@ import { Server as SocketServer, Socket } from "socket.io";
 import { createGame, updateGame } from "../shared/Game";
 import { Connection } from "./Connection";
 
+import { RivetClient } from "@rivet-gg/api";
+export const RIVET = new RivetClient({ token: process.env.RIVET_TOKEN });
+RIVET.matchmaker.lobbies.ready({});
+
 // Create game
 let game = createGame(true);
 
@@ -17,7 +21,16 @@ const socketServer = new SocketServer(port, {
 socketServer.on("connection", setupConnection);
 
 async function setupConnection(socket: Socket) {
-	new Connection(game, socket);
+    // Read the token passed to the socket query
+    let playerToken = socket.handshake.query.token as string;
+
+    // Validate the player token with the matchmaker
+    await RIVET.matchmaker.players.connected({ playerToken });
+
+    // Remove the player when disconnected
+    socket.on("disconnect", () => RIVET.matchmaker.players.disconnected({ playerToken }));
+
+    new Connection(game, socket);
 }
 
 // Update game & broadcast state
