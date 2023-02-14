@@ -21,7 +21,7 @@ The following guide will walk you through integraing and deploying a game with R
 
 <details>
 <summary>
-**Step 1**: Run locally without Rivet
+Step 1: Run locally without Rivet
 </summary>
 
 Run the following commands in your terminal to run the project locally:
@@ -36,7 +36,7 @@ This will open your browser to http://localhost:8080. Verify the game works.
 
 <details>
 <summary>
-**Step 2**: Initialize project
+Step 2: Initialize project
 </summary>
 
 Run the following command to setup your project:
@@ -63,7 +63,10 @@ You can also run `rivet init` wihtout any flags to go through the interactive se
 [🛟 *Checkpoint* 🛟](https://github.com/rivet-gg/example-tanks-typescript-canvas-socketio/tree/checkpoint/01-init)
 </details>
 
-### Step 3: Install `@rivet-gg/api`
+<details>
+<summary>
+Step 3: Install `@rivet-gg/api`
+</summary>
 
 Run the following to install the library to interact with Rivet:
 
@@ -72,8 +75,12 @@ npm install --save @rivet-gg/api
 ```
 
 [🛟 *Checkpoint* 🛟](https://github.com/rivet-gg/example-tanks-typescript-canvas-socketio/tree/checkpoint/01-init)
+</details>
 
-### Step 4: Integrate Rivet Matchmaker in to the client
+<details>
+<summary>
+Step 4: Integrate Rivet Matchmaker in to the client
+</summary>
 
 Add the following to the top of `client/Client.ts`:
 
@@ -103,8 +110,12 @@ Run `npm start` again and validate the game still connects.
 Open the network inspector and reload to see a `POST` request to `https://matchmaker.api.rivet.gg/v1/lobbies/find`.
 
 [🛟 *Checkpoint* 🛟](https://github.com/rivet-gg/example-tanks-typescript-canvas-socketio/tree/checkpoint/02-integrate-client)
+</details>
 
-### Step 5: Integrate Rivet Matchmaker in to the server
+<details>
+<summary>
+Step 5: Integrate Rivet Matchmaker in to the server
+</summary>
 
 Add the following to the top of `server/index.ts`:
 
@@ -138,8 +149,12 @@ async function setupConnection(socket: Socket) {
 ```
 
 [🛟 *Checkpoint* 🛟](https://github.com/rivet-gg/example-tanks-typescript-canvas-socketio/tree/checkpoint/03-integrate-server)
+</details>
 
-### Step 6: Deploy to Rivet
+<details>
+<summary>
+Step 6: Deploy to Rivet
+</summary>
 
 Deploy your game to Rivet with:
 
@@ -155,3 +170,4 @@ The CLI will print a link ending in *rivet.game*. Share the link with a friend t
 > - Build & upload your site for [Rivet CDN](https://docs.rivet.gg/cdn/introduction)
 > - Create a version on Rivet
 > - Deploy the version to the *Production* namespace
+</details>
