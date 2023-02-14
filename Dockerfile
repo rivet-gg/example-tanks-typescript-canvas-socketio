@@ -1,20 +1,15 @@
 # === Build ===
 FROM node:16-alpine as build
 WORKDIR /app
-
-RUN apk add --no-cache git
-
-COPY package.json package-lock.json ./
-RUN npm install --production
-
+COPY ./package.json ./package-lock.json /app/
+RUN npm install
 COPY . .
 RUN npm run build:server
 
 # === Run ===
 FROM node:16-alpine
 WORKDIR /app
-COPY --from=build /app /app
-
-ENV PORT=80
-EXPOSE 80
+COPY --from=build /app/package.json /app/package-lock.json /app/
+RUN npm install --production
+COPY --from=build /app/dist/ /app/dist/
 CMD node dist/server/index.js
