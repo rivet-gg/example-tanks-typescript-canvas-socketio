@@ -21,7 +21,7 @@ The following guide will walk you through integraing and deploying a game with R
 
 <details>
 <summary>
-### Step 1: Run locally without Rivet
+**Step 1**: Run locally without Rivet
 </summary>
 
 Run the following commands in your terminal to run the project locally:
@@ -34,7 +34,10 @@ npm start
 This will open your browser to http://localhost:8080. Verify the game works.
 </details>
 
-### Step 2: Initialize project
+<details>
+<summary>
+**Step 2**: Initialize project
+</summary>
 
 Run the following command to setup your project:
 
@@ -58,6 +61,7 @@ rivet init \
 You can also run `rivet init` wihtout any flags to go through the interactive setup process.
 
 [🛟 *Checkpoint* 🛟](https://github.com/rivet-gg/example-tanks-typescript-canvas-socketio/tree/checkpoint/01-init)
+</details>
 
 ### Step 3: Install `@rivet-gg/api`
 
