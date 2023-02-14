@@ -4,7 +4,9 @@ import { Connection } from "./Connection";
 
 import { RivetClient } from "@rivet-gg/api";
 export const RIVET = new RivetClient({ token: process.env.RIVET_TOKEN });
-RIVET.matchmaker.lobbies.ready({});
+
+// Notify Rivet that this lobby is ready to accept players
+RIVET.matchmaker.lobbies.ready();
 
 // Create game
 let game = createGame(true);
