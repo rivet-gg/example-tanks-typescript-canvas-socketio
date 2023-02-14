@@ -19,7 +19,10 @@ This is the starter branch for walking through the integration of a game in to R
 
 The following guide will walk you through integraing and deploying a game with Rivet.
 
+<details>
+<summary>
 ### Step 1: Run locally without Rivet
+</summary>
 
 Run the following commands in your terminal to run the project locally:
 
@@ -29,6 +32,7 @@ npm start
 ```
 
 This will open your browser to http://localhost:8080. Verify the game works.
+</details>
 
 ### Step 2: Initialize project
 
