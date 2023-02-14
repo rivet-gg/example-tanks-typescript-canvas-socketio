@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "",
     "scripts": {
-        "start": "concurrently --kill-others \"npm:start:server\" \"npm:watch:client\"",
+        "start": "npm install && concurrently --kill-others \"npm:start:server\" \"npm:watch:client\"",
         "start:server": "kill-port -s 3000 && ts-node -r dotenv/config server/index.ts",
         "watch": "npm install && concurrently --kill-others \"npm:watch:server\" \"npm:watch:client\"",
         "watch:server": "kill-port -s 3000 && nodemon -r dotenv/config --delay 1 --watch server --watch shared --ext ts --exec ts-node server/index.ts",
