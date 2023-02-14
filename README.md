@@ -129,6 +129,8 @@ async function setupConnection(socket: Socket) {
 }
 ```
 
+[🛟 *Checkpoint* 🛟](https://github.com/rivet-gg/example-tanks-typescript-canvas-socketio/tree/checkpoint/03-integrate-server)
+
 ### Step 6: Deploy to Rivet
 
 Deploy your game to Rivet with:
@@ -141,7 +143,7 @@ The CLI will print a link ending in *rivet.game*. Share the link with a friend t
 
 > **What did this do?**
 >
-> - Build & upload your site for [Rivet CDN](https://docs.rivet.gg/cdn/introduction)
 > - Build & upload your Docker image for [Rivet Serverless Lobbies](https://docs.rivet.gg/serverless-lobbies/introduction)
+> - Build & upload your site for [Rivet CDN](https://docs.rivet.gg/cdn/introduction)
 > - Create a version on Rivet
-> - Deploy your version to the production namespace
+> - Deploy the version to the *Production* namespace
