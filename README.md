@@ -1,12 +1,11 @@
 # Rivet Example Project
 
-**Language:** TypeScript
+**This is the starter branch for walking through the integration of a game in to Rivet.** To see the completed demo, go [here](https://github.com/rivet-gg/example-tanks-typescript-canvas-socketio/tree/checkpoint/03-integrate-server).
 
-**Rendering:** HTML5 Canvas
+| Language   | Rendering      | Networking |
+| ---------- | -------------- | ---------- |
+| TypeScript | HTML5 Canvas | Socket.io  |
 
-**Networking:** Socket.io
-
-This is the starter branch for walking through the integration of a game in to Rivet.
 
 ## Prerequisites
 
