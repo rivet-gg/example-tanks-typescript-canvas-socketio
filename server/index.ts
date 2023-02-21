@@ -3,10 +3,10 @@ import { createGame, updateGame } from "../shared/Game";
 import { Connection } from "./Connection";
 
 // Create game
-let game = createGame(true);
+const game = createGame(true);
 
 // Start server
-const port = parseInt(process.env.PORT!) || 3000;
+const port = parseInt(process.env.PORT) || 3000;
 const socketServer = new SocketServer(port, {
 	cors: {
 		// Once you deploy your own game, make sure the CORS is restrited to
