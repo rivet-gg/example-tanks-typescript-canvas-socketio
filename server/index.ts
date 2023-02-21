@@ -3,7 +3,7 @@ import { createGame, updateGame } from "../shared/Game";
 import { Connection } from "./Connection";
 
 import { RivetClient } from "@rivet-gg/api";
-export const RIVET = new RivetClient({ token: process.env.RIVET_TOKEN });
+export const RIVET = new RivetClient({ token: process.env.RIVET_LOBBY_TOKEN });
 
 // Notify Rivet that this lobby is ready to accept players
 RIVET.matchmaker.lobbies.ready();
@@ -23,16 +23,18 @@ const socketServer = new SocketServer(port, {
 socketServer.on("connection", setupConnection);
 
 async function setupConnection(socket: Socket) {
-    // Read the token passed to the socket query
-    let playerToken = socket.handshake.query.token as string;
+	// Read the token passed to the socket query
+	let playerToken = socket.handshake.query.token as string;
 
-    // Validate the player token with the matchmaker
-    await RIVET.matchmaker.players.connected({ playerToken });
+	// Validate the player token with the matchmaker
+	await RIVET.matchmaker.players.connected({ playerToken });
 
-    // Remove the player when disconnected
-    socket.on("disconnect", () => RIVET.matchmaker.players.disconnected({ playerToken }));
+	// Remove the player when disconnected
+	socket.on("disconnect", () =>
+		RIVET.matchmaker.players.disconnected({ playerToken })
+	);
 
-    new Connection(game, socket);
+	new Connection(game, socket);
 }
 
 // Update game & broadcast state
