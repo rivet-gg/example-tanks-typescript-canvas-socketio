@@ -109,7 +109,7 @@ function update(client: Client) {
 		// Determine rotation
 		const aimDir = Math.atan2(
 			client.input.mousePosition.y - client.canvas.clientHeight / 2,
-			client.input.mousePosition.x - client.canvas.clientWidth / 2,
+			client.input.mousePosition.x - client.canvas.clientWidth / 2
 		);
 
 		client.connection?.socket.emit("input", moveX, moveY, aimDir);
@@ -180,16 +180,16 @@ function renderBackground(client: Client, ctx: CanvasRenderingContext2D) {
 		const tileSize =
 			client.assets.tileSand.height * client.assets.scaleFactor;
 		const tileXMin = Math.floor(
-			(client.cameraOffsetX - client.screenWidth / 2) / tileSize,
+			(client.cameraOffsetX - client.screenWidth / 2) / tileSize
 		);
 		const tileXMax = Math.ceil(
-			(client.cameraOffsetX + client.screenWidth / 2) / tileSize,
+			(client.cameraOffsetX + client.screenWidth / 2) / tileSize
 		);
 		const tileYMin = Math.floor(
-			(client.cameraOffsetY - client.game.viewportHeight / 2) / tileSize,
+			(client.cameraOffsetY - client.game.viewportHeight / 2) / tileSize
 		);
 		const tileYMax = Math.ceil(
-			(client.cameraOffsetY + client.game.viewportHeight / 2) / tileSize,
+			(client.cameraOffsetY + client.game.viewportHeight / 2) / tileSize
 		);
 		for (let x = tileXMin; x <= tileXMax; x++) {
 			for (let y = tileYMin; y <= tileYMax; y++) {
@@ -198,7 +198,7 @@ function renderBackground(client: Client, ctx: CanvasRenderingContext2D) {
 					x * tileSize,
 					y * tileSize,
 					tileSize,
-					tileSize,
+					tileSize
 				);
 			}
 		}
@@ -221,7 +221,7 @@ function renderWall(client: Client, ctx: CanvasRenderingContext2D) {
 				progress - wallSize / 2,
 				-paddedArenaSize / 2 - wallSize / 2,
 				wallSize,
-				wallSize,
+				wallSize
 			);
 			// Bottom
 			ctx.drawImage(
@@ -229,7 +229,7 @@ function renderWall(client: Client, ctx: CanvasRenderingContext2D) {
 				progress - wallSize / 2,
 				paddedArenaSize / 2 - wallSize / 2,
 				wallSize,
-				wallSize,
+				wallSize
 			);
 			// Left
 			ctx.drawImage(
@@ -237,7 +237,7 @@ function renderWall(client: Client, ctx: CanvasRenderingContext2D) {
 				-paddedArenaSize / 2 - wallSize / 2,
 				progress - wallSize / 2,
 				wallSize,
-				wallSize,
+				wallSize
 			);
 			// Right
 			ctx.drawImage(
@@ -245,7 +245,7 @@ function renderWall(client: Client, ctx: CanvasRenderingContext2D) {
 				paddedArenaSize / 2 - wallSize / 2,
 				progress - wallSize / 2,
 				wallSize,
-				wallSize,
+				wallSize
 			);
 		}
 	}
@@ -289,7 +289,7 @@ function renderMenu(client: Client, ctx: CanvasRenderingContext2D) {
 				-client.screenWidth / 2 + 20,
 				client.screenHeight / 2 -
 					20 -
-					(instructions.length - i - 1) * 50,
+					(instructions.length - i - 1) * 50
 			);
 		}
 		ctx.restore();
@@ -299,7 +299,7 @@ function renderMenu(client: Client, ctx: CanvasRenderingContext2D) {
 function renderFullscreenMessage(
 	client: Client,
 	ctx: CanvasRenderingContext2D,
-	message: string,
+	message: string
 ) {
 	ctx.save();
 	ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
@@ -307,7 +307,7 @@ function renderFullscreenMessage(
 		-client.screenWidth / 2,
 		-client.screenHeight / 2,
 		client.screenWidth,
-		client.screenHeight,
+		client.screenHeight
 	);
 	ctx.restore();
 
