@@ -71,7 +71,6 @@ async function connect(client: Client) {
 	client.connection = new Connection(client, false, "0.0.0.0:3000", {});
 }
 
-
 export function getCurrentPlayer(client: Client): PlayerState | undefined {
 	if (client.currentPlayerId) {
 		return client.game.state.players[client.currentPlayerId];
