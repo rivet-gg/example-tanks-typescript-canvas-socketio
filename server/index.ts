@@ -24,14 +24,14 @@ socketServer.on("connection", setupConnection);
 
 async function setupConnection(socket: Socket) {
 	// Read the token passed to the socket query
-	let playerToken = socket.handshake.query.token as string;
+	const playerToken = socket.handshake.query.token as string;
 
 	// Validate the player token with the matchmaker
 	await RIVET.matchmaker.players.connected({ playerToken });
 
 	// Remove the player when disconnected
 	socket.on("disconnect", () =>
-		RIVET.matchmaker.players.disconnected({ playerToken })
+		RIVET.matchmaker.players.disconnected({ playerToken }),
 	);
 
 	new Connection(game, socket);
