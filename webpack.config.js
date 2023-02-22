@@ -33,7 +33,7 @@ module.exports = (env) => {
 		devtool: "inline-source-map",
 		devServer: {
 			static: path.join(__dirname, "dist"),
-			host: "0.0.0.0",
+			host: "127.0.0.1",
 			port: 8080,
 			hot: true,
 			open: true,
