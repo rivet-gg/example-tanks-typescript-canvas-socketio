@@ -10,7 +10,7 @@ import { renderExplosion } from "../shared/Explosion";
 import { renderTurret } from "../shared/Turret";
 
 import { RivetClient } from "@rivet-gg/api";
-export const RIVET = new RivetClient({ token: process.env.RIVET_PUBLIC_TOKEN });
+export const RIVET = new RivetClient({ token: process.env.RIVET_TOKEN });
 
 const TITLE_TEXT = "Tanks!";
 
