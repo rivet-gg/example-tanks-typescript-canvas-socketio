@@ -1,14 +1,14 @@
-import * as tileSandUrl from "./assets/tileSand1.png";
-import * as tankBodyRedUrl from "./assets/tankBody_red_outline.png";
-import * as tankBodyBlueUrl from "./assets/tankBody_blue_outline.png";
-import * as tankBarrelRedUrl from "./assets/tankRed_barrel1_outline.png";
-import * as tankBarrelBlueUrl from "./assets/tankBlue_barrel1_outline.png";
-import * as bulletUrl from "./assets/shotRed.png";
-import * as wallUrl from "./assets/barricadeWood.png";
-import * as barrelUrl from "./assets/barrelBlack_top.png";
-import * as explosionUrl from "./assets/explosion4.png";
-import * as turretBodyUrl from "./assets/tankBody_dark_outline.png";
-import * as turretBarrelUrl from "./assets/specialBarrel2_outline.png";
+import tileSandUrl from "./assets/tileSand1.png";
+import tankBodyRedUrl from "./assets/tankBody_red_outline.png";
+import tankBodyBlueUrl from "./assets/tankBody_blue_outline.png";
+import tankBarrelRedUrl from "./assets/tankRed_barrel1_outline.png";
+import tankBarrelBlueUrl from "./assets/tankBlue_barrel1_outline.png";
+import bulletUrl from "./assets/shotRed.png";
+import wallUrl from "./assets/barricadeWood.png";
+import barrelUrl from "./assets/barrelBlack_top.png";
+import explosionUrl from "./assets/explosion4.png";
+import turretBodyUrl from "./assets/tankBody_dark_outline.png";
+import turretBarrelUrl from "./assets/specialBarrel2_outline.png";
 
 export class Assets {
 	public scaleFactor = 1;

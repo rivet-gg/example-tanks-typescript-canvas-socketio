@@ -1,10 +1,14 @@
-require("dotenv").config();
+import webpack from "webpack";
+import { fileURLToPath } from "url";
+import path from "path";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import dotenv from "dotenv";
+dotenv.config();
 
-const webpack = require("webpack");
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-module.exports = (env) => {
+export default (env) => {
 	return {
 		entry: {
 			client: path.join(__dirname, "client", "index.ts"),

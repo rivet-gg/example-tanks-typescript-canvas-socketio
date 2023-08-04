@@ -1,10 +1,17 @@
 {
-    "compilerOptions": {
-        "target": "ES6",
-        "module": "CommonJS",
-        "moduleResolution": "Node",
-        "lib": ["ES6", "DOM"],
-        "outDir": "dist/"
-    },
-    "include": ["server/**/*.ts", "client/**/*.ts", "shared/**/*.ts"]
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "ESNext",
+		"moduleResolution": "Node",
+		"esModuleInterop": true,
+		// "allowImportingTsExtensions": true,
+		"lib": ["ES6", "DOM"],
+		"outDir": "dist/"
+	},
+	"ts-node": {
+		// Allows importing without a file extension
+		"experimentalSpecifierResolution": "node"
+		// "experimentalResolver": true
+	},
+	"include": ["server/**/*.ts", "client/**/*.ts", "shared/**/*.ts"]
 }

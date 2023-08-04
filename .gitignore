@@ -6,3 +6,5 @@ node_modules/
 ### Rivet ###
 .rivet/
 .env
+cert.pem
+key.pem
