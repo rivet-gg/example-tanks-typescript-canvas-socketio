@@ -16,7 +16,7 @@ export class Connection {
 		query: { [key: string]: string }
 	) {
 		this.socket = io(host, {
-			transports: ["polling", "websocket", "webtransport"],
+			transports: ["webtransport"],
 			reconnection: false,
 			secure,
 			query,

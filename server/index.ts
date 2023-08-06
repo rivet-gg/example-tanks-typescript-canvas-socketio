@@ -1,33 +1,22 @@
 import { readFile } from "node:fs/promises";
-import { createServer } from "node:https";
 import { Server as SocketServer, Socket } from "socket.io";
 import { createGame, updateGame } from "../shared/Game";
 import { Connection } from "./Connection";
-import { Http3Server } from "@fails-components/webtransport";
+import { Http3Server, WebTransport } from "@fails-components/webtransport";
+import { io } from "socket.io-client";
+import { generateWebTransportCertificate } from "./util-wt.mjs";
 
-// HTTP/3 keys
-const key = await readFile("./key.pem");
-const cert = await readFile("./cert.pem");
+global.WebTransport = WebTransport;
 
 // Create game
 const game = createGame(true);
 
 // Start server
 const port = parseInt(process.env.PORT) || 3000;
-const httpsServer = createServer(
-	{
-		key,
-		cert,
-	},
-	async (req, res) => {
-		res.writeHead(404).end();
-	}
-);
-httpsServer.listen(port);
 
 // Start socket server
-const socketServer = new SocketServer(httpsServer, {
-	transports: ["polling", "websocket", "webtransport" as any],
+const socketServer = new SocketServer(port, {
+	transports: ["webtransport" as any],
 	cors: {
 		// Once you deploy your own game, make sure the CORS is restricted to
 		// your domain.
@@ -36,13 +25,26 @@ const socketServer = new SocketServer(httpsServer, {
 });
 socketServer.on("connection", setupConnection);
 
+// const certificate = await generateWebTransportCertificate(
+// 	[{ shortName: "CN", value: "localhost" }],
+// 	{
+// 		// the total length of the validity period MUST NOT exceed two weeks (https://w3c.github.io/webtransport/#custom-certificate-requirements)
+// 		days: 14,
+// 	}
+// );
+// console.log(certificate.fingerprint);
+const certificate = {
+	cert: (await readFile("cert.pem")).toString(),
+	private: (await readFile("key.pem")).toString(),
+};
+
 // Start HTTP/3 server
 const h3Server = new Http3Server({
 	port,
 	host: "0.0.0.0",
 	secret: "changeit",
-	cert: cert.toString(),
-	privKey: key.toString(),
+	cert: certificate.cert,
+	privKey: certificate.private,
 });
 (async () => {
 	const stream = await h3Server.sessionStream("/socket.io/");
@@ -57,6 +59,35 @@ const h3Server = new Http3Server({
 })();
 
 h3Server.startServer();
+h3Server.onServerListening = () => {
+	console.log("HTTP/3 server listening");
+
+	// let client = createClient({ transports: ["webtransport"] });
+	// client.on("connect", () => {
+	// 	console.log("epic");
+	// });
+};
+
+// function createClient(opts) {
+// 	return io(
+// 		`http://127.0.0.1:${port}`,
+// 		Object.assign(
+// 			{
+// 				transportOptions: {
+// 					webtransport: {
+// 						serverCertificateHashes: [
+// 							{
+// 								algorithm: "sha-256",
+// 								value: certificate.hash,
+// 							},
+// 						],
+// 					},
+// 				},
+// 			},
+// 			opts
+// 		)
+// 	);
+// }
 
 async function setupConnection(socket: Socket) {
 	new Connection(game, socket);

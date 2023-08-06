@@ -1,4 +1,5 @@
 import webpack from "webpack";
+import fs from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
 import HtmlWebpackPlugin from "html-webpack-plugin";
@@ -39,6 +40,13 @@ export default (env) => {
 			static: path.join(__dirname, "dist"),
 			host: "127.0.0.1",
 			port: 8080,
+			server: {
+				type: "https",
+				options: {
+					key: fs.readFileSync("key.pem"),
+					cert: fs.readFileSync("cert.pem"),
+				},
+			},
 			hot: true,
 			open: true,
 		},
