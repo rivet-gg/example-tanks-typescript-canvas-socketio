@@ -18,7 +18,7 @@
 	"author": "",
 	"license": "MIT",
 	"dependencies": {
-		"@rivet-gg/api": "^0.0.1-rc15",
+		"@rivet-gg/api": "23.1.0-rc4",
 		"socket.io": "^4.5.4"
 	},
 	"devDependencies": {
