@@ -1,5 +1,7 @@
 # Rivet Example Project
 
+**This repo has moved [here](https://github.com/rivet-gg/examples)]!**
+
 **This is the starter branch for walking through the integration of a game in to Rivet.** To see the completed demo, go [here](https://github.com/rivet-gg/example-tanks-typescript-canvas-socketio/tree/checkpoint/03-integrate-server).
 
 | Language   | Rendering    | Networking |
